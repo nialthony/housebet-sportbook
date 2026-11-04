@@ -1,0 +1,473 @@
+@import './tokens.css';
+@import './fonts.css';
+
+/* ==================================================================
+   RESET
+   ================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--ink-000);
+  color: var(--txt);
+  font-family: var(--ui);
+  font-size: var(--fs-13);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+}
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+button {
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+  font-weight: 500;
+}
+svg {
+  display: block;
+}
+:focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 1px;
+  border-radius: var(--r-row);
+}
+::selection {
+  background: var(--cy-dim);
+  color: var(--txt-hi);
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: var(--r-pill);
+  border: 3px solid var(--ink-000);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==================================================================
+   TYPE PRIMITIVES
+   Every number is tabular. No exceptions.
+   Figtree carries OpenType tnum, so alignment comes from the brand face
+   itself rather than a bolted-on mono that Housebets does not ship.
+   ================================================================== */
+.mono {
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+/* Display face: scoreline, page titles, hero numbers. */
+.display {
+  font-family: var(--display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  font-size: var(--fs-11);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--txt-lo);
+}
+.h1 {
+  font-family: var(--display);
+  font-size: var(--fs-26);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--txt-hi);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.h2 {
+  font-size: var(--fs-20);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--txt-hi);
+}
+.h3 {
+  font-size: var(--fs-15);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--txt-hi);
+}
+.dim {
+  color: var(--txt-lo);
+}
+.dimmer {
+  color: var(--txt-mute);
+}
+.hi {
+  color: var(--txt-hi);
+}
+
+/* ==================================================================
+   SHELL — top bar / left nav / content / side panel
+   ================================================================== */
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: var(--topbar-h);
+  flex: 0 0 var(--topbar-h);
+  background: var(--ink-050);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: 0 var(--s-4);
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+.leftnav {
+  width: var(--nav-w);
+  flex: 0 0 var(--nav-w);
+  border-right: 1px solid var(--line);
+  background: var(--ink-000);
+  padding: var(--s-3) var(--s-2);
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+}
+@media (max-width: 1080px) {
+  .leftnav {
+    display: none;
+  }
+}
+
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--s-5) var(--s-5) 140px;
+}
+@media (max-width: 700px) {
+  .main {
+    padding: var(--s-3) var(--s-3) 132px;
+  }
+}
+
+.sidepanel {
+  width: var(--panel-w);
+  flex: 0 0 var(--panel-w);
+  border-left: 1px solid var(--line);
+  background: var(--ink-000);
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+}
+@media (max-width: 1180px) {
+  .sidepanel {
+    display: none;
+  }
+}
+
+/* ==================================================================
+   SURFACES
+   ================================================================== */
+.card {
+  background: var(--ink-150);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+}
+.panel {
+  background: var(--ink-150);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+}
+.hr {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
+}
+
+/* ==================================================================
+   ODDS BUTTON — the atomic unit of a sportsbook
+   Fixed 64px so columns align down the whole page.
+   ================================================================== */
+.odds {
+  width: var(--odds-w);
+  height: 32px;
+  flex: 0 0 var(--odds-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--r-row);
+  background: var(--ink-200);
+  border: 1px solid var(--line-2);
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-13);
+  font-weight: 500;
+  color: var(--txt-hi);
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+.odds:hover:not(:disabled) {
+  background: var(--ink-250);
+  border-color: var(--line-3);
+}
+.odds:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.odds[data-sel='true'] {
+  background: var(--cy-dim);
+  border-color: var(--cy);
+  color: #eafeff;
+}
+.odds[data-suspended='true'] {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--txt-mute);
+  cursor: not-allowed;
+}
+.odds[data-suspended='true']::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 1px;
+  background: var(--txt-mute);
+  transform: rotate(-14deg);
+}
+.odds-wrap {
+  position: relative;
+  display: contents;
+}
+
+/* odds tick flash — colour that exists for 900ms then decays */
+@keyframes tickUp {
+  0% {
+    background: var(--up-wash);
+    border-color: var(--up);
+    color: var(--up);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+@keyframes tickDn {
+  0% {
+    background: var(--hot-wash);
+    border-color: var(--hot);
+    color: var(--hot);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+.odds.tick-up {
+  animation: tickUp 900ms var(--ease);
+}
+.odds.tick-dn {
+  animation: tickDn 900ms var(--ease);
+}
+
+/* ==================================================================
+   CONTROLS
+   ================================================================== */
+.btn {
+  height: 36px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-row);
+  font-size: var(--fs-13);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  border: 1px solid var(--line-2);
+  background: var(--ink-200);
+  color: var(--txt-hi);
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.btn:hover {
+  background: var(--ink-250);
+}
+.btn-primary {
+  background: var(--hot);
+  border-color: var(--hot);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #ff2f5e;
+  border-color: #ff2f5e;
+}
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--txt-lo);
+}
+.btn-ghost:hover {
+  background: var(--ink-150);
+  color: var(--txt-hi);
+}
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.btn-lg {
+  height: 44px;
+  width: 100%;
+  font-size: var(--fs-15);
+}
+
+.pill {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--txt-lo);
+  font-size: var(--fs-12);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+}
+.pill:hover {
+  color: var(--txt-hi);
+  border-color: var(--line-3);
+}
+.pill[data-on='true'] {
+  background: var(--ink-200);
+  border-color: var(--line-3);
+  color: var(--txt-hi);
+}
+
+.field {
+  height: 40px;
+  padding: 0 var(--s-3);
+  background: var(--ink-000);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-row);
+  color: var(--txt-hi);
+  width: 100%;
+  font-family: var(--num);
+  font-size: var(--fs-15);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--cy);
+}
+.field::placeholder {
+  color: var(--txt-mute);
+  font-family: var(--ui);
+  font-size: var(--fs-13);
+}
+
+/* ==================================================================
+   LIVE DOT — the only permanently coloured element in a row
+   ================================================================== */
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(242, 32, 80, 0.5);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 3px rgba(242, 32, 80, 0);
+  }
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hot);
+  flex: 0 0 6px;
+  animation: livePulse 2s var(--ease) infinite;
+}
+
+.tag {
+  font-family: var(--num);
+  font-size: var(--fs-10);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 2px;
+  border: 1px solid var(--line-2);
+  color: var(--txt-lo);
+}
+.tag-hot {
+  border-color: var(--hot-dim);
+  color: var(--hot);
+  background: var(--hot-wash);
+}
+.tag-cy {
+  border-color: var(--cy-dim);
+  color: var(--cy);
+  background: var(--cy-wash);
+}
+
+/* ==================================================================
+   MOTION KILL SWITCH
+   ================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

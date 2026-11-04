@@ -1,0 +1,90 @@
+/* ------------------------------------------------------------------
+   Housebets Sports — design tokens
+   Palette sampled from the official contest starter wireframe
+   (desk-home.webp): #031015 / #0E212A / #21313C / #F22050 / #4ABAC6
+   Nothing here is invented. Nothing here is decoration.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* --- surfaces: depth by lightness step, never by shadow --- */
+  --ink-000: #031015;
+  --ink-050: #071a21;
+  --ink-100: #0b1a20;
+  --ink-150: #0e212a;
+  --ink-200: #122a34;
+  --ink-250: #162f3a;
+  --line: #1b3038;
+  --line-2: #21313c;
+  --line-3: #2c4250;
+
+  /* --- text --- */
+  --txt-hi: #eaf4f7;
+  --txt: #a9c2cb;
+  --txt-lo: #6c8792;
+  --txt-mute: #4c6570;
+
+  /* --- brand / semantic --- */
+  --hot: #f22050;
+  --hot-dim: #7d1730;
+  --hot-wash: rgba(242, 32, 80, 0.12);
+  --cy: #4abac6;
+  --cy-dim: #1f5b63;
+  --cy-wash: rgba(74, 186, 198, 0.12);
+  --up: #3dd68c;
+  --up-wash: rgba(61, 214, 140, 0.14);
+  --dn: #f22050;
+
+  /* --- type --- */
+  --ui: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Red Hat Display', 'Figtree', Impact, sans-serif;
+  /* No mono family: Figtree ships OpenType tnum, so tabular figures are a
+     font-variant-numeric away. Everything numeric uses --num below. */
+  --num: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  --fs-10: 10px;
+  --fs-11: 11px;
+  --fs-12: 12px;
+  --fs-13: 13px;
+  --fs-15: 15px;
+  --fs-17: 17px;
+  --fs-20: 20px;
+  --fs-26: 26px;
+  --fs-34: 34px;
+  --fs-48: 48px;
+
+  /* --- spacing: 8px grid --- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+
+  /* --- radius: only three values exist --- */
+  --r-row: 2px;
+  --r-card: 4px;
+  --r-pill: 999px;
+
+  /* --- motion --- */
+  --t-fast: 120ms;
+  --t-base: 160ms;
+  --t-slow: 240ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* --- shell metrics --- */
+  --topbar-h: 56px;
+  --nav-w: 216px;
+  --panel-w: 320px;   /* measured off desk-slip: x1120-1439 */
+  --row-h: 48px;      /* wireframe row rhythm: 46/48/52 bands */
+  --row-h-touch: 52px;
+  --odds-w: 64px;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --topbar-h: 52px;
+  }
+}

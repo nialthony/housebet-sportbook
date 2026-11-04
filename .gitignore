@@ -1,0 +1,10 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+shots
+ref/chunks
+ref/fonts.txt
+ref/newest_chunks.txt
+scripts/dbg.mjs

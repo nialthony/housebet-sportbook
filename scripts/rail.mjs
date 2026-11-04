@@ -1,0 +1,12 @@
+import { chromium } from 'playwright'
+const b = await chromium.launch(); const p = await b.newPage({viewport:{width:1440,height:900}})
+await p.goto('http://127.0.0.1:3000/#/', {waitUntil:'networkidle'}); await p.waitForTimeout(600)
+console.log('rail cards:', await p.locator('.rail-card').count())
+console.log('hero prices:', await p.locator('.hero__price').count())
+console.log('first rail card:', (await p.locator('.rail-card').first().innerText()).replace(/\n/g,' | '))
+console.log('hero side text:', (await p.locator('.hero__side').innerText()).replace(/\n/g,' | ').slice(0,260))
+await p.setViewportSize({width:390,height:844}); await p.waitForTimeout(400)
+console.log('phone rail cards:', await p.locator('.rail-card').count())
+console.log('phone hero prices:', await p.locator('.hero__price').count())
+console.log('phone overflow:', await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1))
+await b.close()

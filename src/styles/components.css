@@ -1,0 +1,654 @@
+/* ==================================================================
+   SECTIONS
+   ================================================================== */
+.sec {
+  margin-bottom: var(--s-8);
+}
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  height: 34px;
+  margin-bottom: var(--s-2);
+  border-bottom: 1px solid var(--line);
+}
+.sec-head h2 {
+  font-size: var(--fs-15);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--txt-hi);
+}
+.sec-head .count {
+  font-family: var(--num);
+  font-size: var(--fs-11);
+  color: var(--txt-mute);
+}
+
+/* ==================================================================
+   MATCH ROW — the workhorse. 44px desktop / 52px touch.
+   Columns are fixed so odds align down the whole page.
+   ================================================================== */
+.mrow {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto auto auto auto 28px;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--row-h);
+  padding: 0 var(--s-2) 0 var(--s-2);
+  border-bottom: 1px solid var(--line);
+  background: var(--ink-100);
+  transition: background var(--t-fast) var(--ease);
+}
+.mrow:hover {
+  background: var(--ink-150);
+}
+.mrow > * {
+  min-width: 0;
+}
+
+.mrow__time {
+  font-family: var(--num);
+  font-size: var(--fs-11);
+  color: var(--txt-lo);
+  display: flex;
+  align-items: center;
+  gap: 5;
+  gap: 5px;
+}
+.mrow__time b {
+  font-weight: 600;
+  color: var(--txt-hi);
+}
+
+.mrow__teams {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-left: var(--s-2);
+  overflow: hidden;
+}
+.mrow__team {
+  font-size: var(--fs-13);
+  color: var(--txt-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mrow__team.away {
+  color: var(--txt);
+}
+.mrow__vs {
+  font-family: var(--num);
+  font-size: var(--fs-10);
+  color: var(--txt-mute);
+  flex: 0 0 auto;
+}
+.mrow__score {
+  font-family: var(--num);
+  font-size: var(--fs-13);
+  font-weight: 700;
+  color: var(--txt-hi);
+  flex: 0 0 auto;
+  letter-spacing: -0.02em;
+}
+
+.mrow__odds {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 4px;
+  justify-content: end;
+}
+.mrow__act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.mrow__link {
+  display: contents;
+}
+
+/* -------- phone: two-line row -------- */
+@media (max-width: 700px) {
+  .mrow {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: 'teams odds star' 'time odds star';
+    height: auto;
+    padding: 9px var(--s-2);
+    gap: 4px var(--s-2);
+    align-items: start;
+  }
+  .mrow__time {
+    grid-area: time;
+  }
+  .mrow__teams {
+    grid-area: teams;
+    padding-left: 0;
+  }
+  .mrow__odds {
+    grid-area: odds;
+    align-self: center;
+  }
+  .mrow__act {
+    grid-area: star;
+    align-self: center;
+  }
+  .mrow__team {
+    font-size: var(--fs-12);
+  }
+  .odds {
+    width: 56px;
+    flex: 0 0 56px;
+    height: 34px;
+  }
+}
+
+/* ==================================================================
+   COMPETITION HEADER (football page)
+   ================================================================== */
+.comp-head {
+  display: grid;
+  grid-template-columns: 46px 1fr auto auto auto 28px;
+  align-items: center;
+  gap: var(--s-2);
+  height: 30px;
+  padding: 0 var(--s-2);
+  background: var(--ink-150);
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: 4;
+}
+.comp-head__name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-12);
+  font-weight: 600;
+  color: var(--txt-hi);
+  letter-spacing: -0.01em;
+}
+.comp-head__cols {
+  font-family: var(--num);
+  font-size: var(--fs-10);
+  color: var(--txt-mute);
+  width: var(--odds-w);
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .comp-head {
+    display: flex;
+    padding: 0 var(--s-2);
+  }
+  .comp-head__cols {
+    display: none;
+  }
+}
+
+/* ==================================================================
+   CARDS / GRIDS
+   ================================================================== */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: var(--s-2);
+}
+.comp-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--ink-150);
+  padding: var(--s-3);
+  text-align: left;
+  transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.comp-card:hover {
+  border-color: var(--line-3);
+  background: var(--ink-100);
+}
+.comp-card__badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  background: var(--ink-200);
+  border: 1px solid var(--line-2);
+  display: grid;
+  place-items: center;
+  font-family: var(--num);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--txt);
+  letter-spacing: 0.02em;
+}
+
+/* ==================================================================
+   HERO / LIVE STRIP
+   ================================================================== */
+/* ==================================================================
+   LIVE RAIL — horizontal strip of in-play scoreboards.
+   This is the first thing on the page on purpose: it proves the product
+   is live within one second of loading.
+   ================================================================== */
+.rail {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.rail > * {
+  scroll-snap-align: start;
+}
+.rail-card {
+  flex: 0 0 176px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-card);
+  background: var(--ink-150);
+  padding: 9px 10px 10px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.rail-card:hover {
+  border-color: var(--line-3);
+  background: var(--ink-100);
+}
+.rail-card__top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--num);
+  font-size: 9px;
+  color: var(--txt-mute);
+}
+.rail-card__score {
+  font-family: var(--display);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--fs-26);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--txt-hi);
+  line-height: 1;
+}
+.rail-card__team {
+  font-size: var(--fs-11);
+  color: var(--txt);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero {
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-card);
+  background: linear-gradient(180deg, var(--ink-150), var(--ink-050));
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.hero__prices {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.hero__price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-row);
+  background: var(--ink-200);
+  font-size: var(--fs-12);
+  color: var(--txt-hi);
+}
+.hero__price:hover:not(:disabled) {
+  border-color: var(--line-3);
+  background: var(--ink-250);
+}
+.hero__price[data-sel='true'] {
+  border-color: var(--cy);
+  background: var(--cy-dim);
+  color: #eafeff;
+}
+.hero__price[data-susp='true'] {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--txt-mute);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+@keyframes hpUp {
+  0% {
+    background: var(--up-wash);
+    border-color: var(--up);
+    color: var(--up);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+@keyframes hpDn {
+  0% {
+    background: var(--hot-wash);
+    border-color: var(--hot);
+    color: var(--hot);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+.hero__price.tick-up {
+  animation: hpUp 900ms var(--ease);
+}
+.hero__price.tick-dn {
+  animation: hpDn 900ms var(--ease);
+}
+.hero__score {
+  font-family: var(--display);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--fs-48);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--txt-hi);
+  line-height: 1;
+}
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==================================================================
+   MATCH PAGE
+   ================================================================== */
+/* Anything clickable must clear the sticky chrome when scrolled into view,
+   otherwise a real user taps a header instead of the price underneath it. */
+.sel,
+.mrow,
+.market-group,
+.odds {
+  scroll-margin-top: calc(var(--topbar-h) + 64px);
+  scroll-margin-bottom: 80px;
+}
+.match-head {
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--ink-150);
+  overflow: hidden;
+}
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+.scoreline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-4);
+}
+.scoreline__n {
+  font-family: var(--display);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: var(--fs-48);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--txt-hi);
+  line-height: 1;
+}
+.scoreline__sep {
+  font-family: var(--num);
+  font-size: var(--fs-26);
+  color: var(--txt-mute);
+}
+@media (max-width: 560px) {
+  .scoreline__n {
+    font-size: var(--fs-34);
+  }
+  .scoreboard {
+    padding: var(--s-4) var(--s-3) var(--s-3);
+  }
+}
+
+.market-group {
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--ink-150);
+  margin-bottom: var(--s-3);
+  overflow: hidden;
+}
+/* Sticks BELOW the sticky group filter bar, not on top of it. */
+.market-group__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 36px;
+  padding: 0 var(--s-3);
+  background: var(--ink-100);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: calc(var(--topbar-h) + 44px);
+  z-index: 3;
+}
+.market {
+  border-bottom: 1px solid var(--line);
+}
+.market:last-child {
+  border-bottom: 0;
+}
+.market__name {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: var(--s-3) var(--s-3) 6px;
+  font-size: var(--fs-12);
+  color: var(--txt-lo);
+}
+.sel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 5px;
+  padding: 0 var(--s-3) var(--s-3);
+}
+.sel-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-row);
+  background: var(--ink-200);
+  color: var(--txt-hi);
+  font-size: var(--fs-12);
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.sel:hover:not(:disabled) {
+  background: var(--ink-250);
+  border-color: var(--line-3);
+}
+.sel[data-sel='true'] {
+  background: var(--cy-dim);
+  border-color: var(--cy);
+  color: #eafeff;
+}
+.sel[data-susp='true'] {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--txt-mute);
+  cursor: not-allowed;
+}
+.sel__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sel__strike {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 50%;
+  height: 1px;
+  background: var(--txt-mute);
+  transform: rotate(-2deg);
+}
+@keyframes selUp {
+  0% {
+    background: var(--up-wash);
+    border-color: var(--up);
+    color: var(--up);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+@keyframes selDn {
+  0% {
+    background: var(--hot-wash);
+    border-color: var(--hot);
+    color: var(--hot);
+  }
+  100% {
+    background: var(--ink-200);
+    border-color: var(--line-2);
+    color: var(--txt-hi);
+  }
+}
+.sel.tick-up {
+  animation: selUp 900ms var(--ease);
+}
+.sel.tick-dn {
+  animation: selDn 900ms var(--ease);
+}
+
+/* ==================================================================
+   BETS PAGE
+   ================================================================== */
+.bets-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 392px) minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+}
+@media (max-width: 1080px) {
+  .bets-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.bets-col {
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--ink-100);
+  height: calc(100vh - var(--topbar-h) - 92px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: sticky;
+  top: var(--topbar-h);
+}
+@media (max-width: 1080px) {
+  .bets-col {
+    height: auto;
+    position: static;
+  }
+}
+
+/* ==================================================================
+   JUDGE / STATE SIMULATOR
+   ================================================================== */
+.simbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-card);
+  margin-bottom: var(--s-4);
+  background: var(--ink-050);
+}
+.simbar .eyebrow {
+  color: var(--cy);
+}
+
+/* ==================================================================
+   MISC
+   ================================================================== */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+.kbd {
+  font-family: var(--num);
+  font-size: 10px;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--txt-lo);
+  background: var(--ink-150);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-11);
+  color: var(--txt-mute);
+  margin-bottom: var(--s-3);
+}
+.breadcrumb a:hover {
+  color: var(--txt-hi);
+}
+
+/* team code badge, e.g. ARS / BHA — from the wireframe scoreboard */
+.team-code {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: var(--fs-13);
+  letter-spacing: 0.02em;
+  color: var(--txt-hi);
+  background: var(--ink-200);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-row);
+  padding: 5px 7px;
+  flex: 0 0 auto;
+  min-width: 38px;
+  text-align: center;
+}
