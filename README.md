@@ -91,13 +91,40 @@ npm run build    # → dist/
 
 ## 6. Deploy (public link, no login)
 
-Hash routing is used, so any static host works with zero config.
+Hash routing plus `base: './'` means the build works unchanged whether it is
+served from a domain root or from `/<repo-name>/`. Verified: fonts, CSS and JS
+all resolve from a subdirectory with no failed requests.
+
+### GitHub Pages (recommended — already wired)
+
+A workflow in `.github/workflows/deploy.yml` builds and deploys on every push
+to `main`. One-time setup, ~2 minutes:
+
+```bash
+# 1. create an empty repo on github.com  (must be Public for free Pages)
+git remote add origin https://github.com/<you>/<repo>.git
+git push -u origin main
+
+# 2. on GitHub: Settings → Pages → Source → "GitHub Actions"
+# 3. wait ~60s, then open the URL it gives you
+```
+
+Every later `git push` redeploys automatically.
+
+### Alternatives
 
 - **Netlify** — `npm run build`, drag `dist/` to app.netlify.com/drop
-- **Vercel** — `npx vercel` (a `vercel.json` rewrite is already included)
-- **GitHub Pages** — `npm run build`, push `dist/` to a `gh-pages` branch
+- **Vercel** — `npx vercel`
+- **Any static host** — upload the contents of `dist/`
 
-`public/_redirects` and `public/vercel.json` are already in place.
+`public/_redirects` (Netlify/Cloudflare) and `public/vercel.json` are in place.
+`npm run build` also writes `dist/404.html` as a copy of `index.html`.
+
+### Fonts
+
+Self-hosted in `src/assets/fonts/` and fingerprinted by Vite, so they resolve
+correctly at any base path. Do not move them to `public/` — absolute `/fonts/…`
+URLs break under a `/<repo-name>/` deploy.
 
 ---
 
