@@ -108,6 +108,10 @@ function TopBar() {
 }
 
 /* -------------------------------------------------------------- left nav */
+/** Sample figure for the on-chain house bankroll. Static, so it reads as a
+ *  pool size rather than anything tied to an account. */
+const HOUSE_BANKROLL = 3_447_450
+
 function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; label: string; badge?: number }) {
   return (
     <NavLink to={to} end={to === '/'} style={{ display: 'block' }}>
@@ -286,7 +290,8 @@ function LeftNav() {
           House bankroll
         </div>
         <div className="mono" style={{ fontSize: 'var(--fs-15)', color: 'var(--txt-hi)', fontWeight: 600 }}>
-          {s.blockHeight.toLocaleString('en-US')}
+          {HOUSE_BANKROLL.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+          <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}> USDT</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 3 }}>
           <span className="live-dot" style={{ width: 5, height: 5 }} />

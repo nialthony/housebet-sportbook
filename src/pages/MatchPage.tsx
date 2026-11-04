@@ -168,7 +168,7 @@ export default function MatchPage() {
                   color: m.status === 'live' ? 'var(--hot)' : 'var(--txt-lo)',
                 }}
               >
-                {m.status === 'live' ? `${m.minute}'` : `Kick-off in ${m.kickoffOffsetMin}m`}
+                {m.status === 'live' ? `${m.minute}′` : `Kick-off in ${m.kickoffOffsetMin}m`}
               </span>
             </div>
             <div className="scoreline">
