@@ -98,9 +98,11 @@ all resolve from a subdirectory with no failed requests.
 ### GitHub Pages (recommended — already wired)
 
 A ready-made workflow ships in the repo as
-`.github/workflows/deploy.yml.disabled` — **rename it to `deploy.yml`** to turn
-on build-and-deploy on every push to `main`, then set
-`Settings → Pages → Source → GitHub Actions`.
+`docs/github-actions-deploy.yml` — **copy it to `.github/workflows/deploy.yml`**
+to turn on build-and-deploy on every push to `main`, then set
+`Settings → Pages → Source → GitHub Actions`. (It lives outside `.github/`
+because pushing workflow files needs a token scope this repo's deploy token
+does not have.)
 
 The site is already live without it, deployed from the `gh-pages` branch:
 
