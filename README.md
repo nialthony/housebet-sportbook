@@ -97,8 +97,12 @@ all resolve from a subdirectory with no failed requests.
 
 ### GitHub Pages (recommended — already wired)
 
-A workflow in `.github/workflows/deploy.yml` builds and deploys on every push
-to `main`. One-time setup, ~2 minutes:
+A ready-made workflow ships in the repo as
+`.github/workflows/deploy.yml.disabled` — **rename it to `deploy.yml`** to turn
+on build-and-deploy on every push to `main`, then set
+`Settings → Pages → Source → GitHub Actions`.
+
+The site is already live without it, deployed from the `gh-pages` branch:
 
 ```bash
 # 1. create an empty repo on github.com  (must be Public for free Pages)
