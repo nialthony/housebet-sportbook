@@ -5,6 +5,7 @@ import { BetSlip } from '../components/BetSlip'
 import { StateBar } from '../components/StateBar'
 import { IconAlert, IconCheck, IconCash, IconLink, IconLock } from '../components/Icons'
 import { fmtUsdt } from '../lib/rand'
+import { FixtureLine } from '../components/Crest'
 
 /* --------------------------------------------------------- time filters */
 const TIME_FILTERS = [
@@ -78,7 +79,7 @@ function LedgerRow({ bet }: { bet: Bet }) {
               textOverflow: 'ellipsis',
             }}
           >
-            {bet.marketName} · {bet.fixture}
+            {bet.marketName} · <FixtureLine fixture={bet.fixture} />
           </div>
         </div>
 
@@ -325,7 +326,7 @@ export default function BetsPage() {
 
 function LedgerTable({ rows, empty }: { rows: Bet[]; empty: string }) {
   return (
-    <div className="panel" style={{ overflow: 'hidden' }}>
+    <div className="panel stagger" style={{ overflow: 'hidden' }}>
       <div
         className="eyebrow"
         style={{

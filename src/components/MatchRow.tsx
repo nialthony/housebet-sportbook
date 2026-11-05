@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Match, Selection } from '../data/fixtures'
 import { useStore } from '../state/store'
 import { IconStar, IconChevron, IconAlert } from './Icons'
+import { Crest } from './Crest'
 
 /** The odds shown on a list row are the match-result market. We synthesise stable
  *  selection ids so a row and the match page address the same thing. */
@@ -137,11 +138,12 @@ export function MatchRow({ m, showComp }: { m: Match; showComp?: boolean }) {
 
       <span className="mrow__teams">
         {showComp && (
-          <span className="mono" style={{ fontSize: 9, color: 'var(--txt-mute)', flex: '0 0 auto' }}>
+          <span className="mono mrow__comp" style={{ fontSize: 9, color: 'var(--txt-mute)', flex: '0 0 auto' }}>
             {m.compShort}
           </span>
         )}
         <span className="mrow__team" style={{ fontWeight: live && m.scoreHome > m.scoreAway ? 700 : 500 }}>
+          <Crest team={m.home} />
           {m.home}
         </span>
         {live ? (
@@ -152,10 +154,11 @@ export function MatchRow({ m, showComp }: { m: Match; showComp?: boolean }) {
           <span className="mrow__vs">v</span>
         )}
         <span className="mrow__team away" style={{ fontWeight: live && m.scoreAway > m.scoreHome ? 700 : 500 }}>
+          <Crest team={m.away} />
           {m.away}
         </span>
         {m.period && (
-          <span className="mono" style={{ fontSize: 10, color: 'var(--txt-mute)', flex: '0 0 auto' }}>
+          <span className="mono mrow__period" style={{ fontSize: 10, color: 'var(--txt-mute)', flex: '0 0 auto' }}>
             {m.period}
           </span>
         )}
@@ -226,9 +229,11 @@ export function CompetitionBlock({ name, matches }: { name: string; matches: Mat
           <IconStar size={13} filled={followed} />
         </button>
       </div>
-      {matches.map((m) => (
-        <MatchRow key={m.id} m={m} />
-      ))}
+      <div className="stagger">
+        {matches.map((m) => (
+          <MatchRow key={m.id} m={m} />
+        ))}
+      </div>
     </div>
   )
 }

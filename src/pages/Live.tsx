@@ -146,7 +146,7 @@ export default function Live() {
                   View all <IconChevron size={11} />
                 </button>
               </div>
-              <div className="panel" style={{ overflow: 'hidden' }}>
+              <div className="panel stagger" style={{ overflow: 'hidden' }}>
                 {g.matches.map((m) => (
                   <MatchRow key={m.id} m={m} />
                 ))}
@@ -191,7 +191,7 @@ export default function Live() {
             <h2>Starting soon</h2>
             <span className="count">{soon.length}</span>
           </div>
-          <div className="panel" style={{ overflow: 'hidden' }}>
+          <div className="panel stagger" style={{ overflow: 'hidden' }}>
             {soon.slice(0, 8).map((m) => (
               <MatchRow key={m.id} m={m} showComp />
             ))}

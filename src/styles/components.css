@@ -73,6 +73,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* crest + name share this box */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mrow__team img,
+.mrow__team svg {
+  display: block;
 }
 .mrow__team.away {
   color: var(--txt);
@@ -111,23 +119,33 @@
 
 /* -------- phone: two-line row -------- */
 @media (max-width: 700px) {
+  /* Teams take a full-width line and the prices drop below them.
+     The old 3-column row left the names only 119px at 390px, where 22 of
+     34 club names were already ellipsised before crests existed at all —
+     cramming a crest in on top of that would have truncated every row. */
+  :root {
+    --crest-sz: 16px;
+  }
   .mrow {
-    grid-template-columns: 1fr auto auto;
-    grid-template-areas: 'teams odds star' 'time odds star';
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'teams star' 'odds time';
     height: auto;
-    padding: 9px var(--s-2);
+    padding: 7px var(--s-2);
     gap: 4px var(--s-2);
-    align-items: start;
+    align-items: center;
   }
   .mrow__time {
     grid-area: time;
+    justify-self: end;
   }
   .mrow__teams {
     grid-area: teams;
     padding-left: 0;
+    min-width: 0;
   }
   .mrow__odds {
     grid-area: odds;
+    justify-self: start;
     align-self: center;
   }
   .mrow__act {
@@ -136,11 +154,18 @@
   }
   .mrow__team {
     font-size: var(--fs-12);
+    min-width: 0;
+    gap: 5px;
+  }
+  /* the period ("Set 4") is secondary — the clock on the same row already
+     says how far the match has gone, and it is the first thing to drop */
+  .mrow__period {
+    display: none;
   }
   .odds {
-    width: 56px;
-    flex: 0 0 56px;
-    height: 34px;
+    width: 52px;
+    flex: 0 0 52px;
+    height: 30px;
   }
 }
 
@@ -281,6 +306,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rail-card__team img,
+.rail-card__team svg {
+  display: block;
 }
 
 .hero {

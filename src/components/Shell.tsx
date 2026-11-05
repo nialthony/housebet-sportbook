@@ -434,6 +434,7 @@ function ToastRow({ t, onDone }: { t: import('../state/store').Toast; onDone: ()
   const color = t.kind === 'placed' ? 'var(--up)' : t.kind === 'failed' ? 'var(--hot)' : 'var(--cy)'
   return (
     <div
+      className="toast-in"
       style={{
         border: `1px solid ${t.kind === 'failed' ? 'var(--hot-dim)' : 'var(--line-2)'}`,
         borderLeft: `2px solid ${color}`,

@@ -4,6 +4,7 @@ import { useStore, useCountdown } from '../state/store'
 import type { Bet, SlipItem } from '../state/store'
 import { IconClose, IconLock, IconAlert, IconCheck, IconLink, IconCash, IconSlip, IconBets } from './Icons'
 import { fmtUsdt } from '../lib/rand'
+import { FixtureLine } from './Crest'
 
 /* ------------------------------------------------------------ atoms */
 
@@ -147,7 +148,7 @@ function SlipRow({ item }: { item: SlipItem }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 'var(--fs-13)', color: 'var(--txt-hi)', fontWeight: 600 }}>{item.label}</div>
           <div style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
-            {item.marketName} · {item.fixture}
+            {item.marketName} · <FixtureLine fixture={item.fixture} />
           </div>
         </div>
         <OddsCell item={item} />
@@ -741,6 +742,7 @@ export function MobileSlipBar() {
     <>
       {n > 0 && (
         <div
+          className="slip-bar"
           style={{
             position: 'fixed',
             bottom: 56,

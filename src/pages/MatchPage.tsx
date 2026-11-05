@@ -7,6 +7,7 @@ import { fmtUsdt } from '../lib/rand'
 import { useOddsTick, useOddsDirection } from '../lib/useOddsTick'
 import { IconAlert, IconChevron, IconStar, IconLive, IconLock, IconSearch, IconClose } from '../components/Icons'
 import { StateBar } from '../components/StateBar'
+import { Crest } from '../components/Crest'
 
 const GROUP_ORDER = ['Popular', 'Goals', 'Halves', 'Handicaps', 'Goalscorers', 'Corners & cards']
 
@@ -142,6 +143,7 @@ export default function MatchPage() {
         <div className="scoreboard">
           <div style={{ textAlign: 'left', minWidth: 0 }}>
             <div className="row" style={{ gap: 8 }}>
+              <Crest team={m.home} size={40} />
               <span className="team-code">{teamCode(m.home)}</span>
               <div style={{ minWidth: 0 }}>
                 <div className="h2" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -201,6 +203,7 @@ export default function MatchPage() {
                 </div>
               </div>
               <span className="team-code">{teamCode(m.away)}</span>
+              <Crest team={m.away} size={40} />
             </div>
           </div>
         </div>
@@ -332,28 +335,30 @@ export default function MatchPage() {
         </div>
       )}
 
-      {groups.map((g) => (
-        <div
-          key={g.name}
-          ref={(el) => {
-            refs.current[g.name] = el
-          }}
-          style={{ scrollMarginTop: 'calc(var(--topbar-h) + 108px)' }}
-        >
-          <div className="market-group">
-            <div className="market-group__head">
-              <span className="h3">{g.name}</span>
-              {g.name === 'Goalscorers' && <span className="tag tag-cy">Sample data · fictional players</span>}
-              <span className="mono" style={{ marginLeft: 'auto', fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>
-                {g.markets.reduce((n, x) => n + x.selections.length, 0)} selections
-              </span>
+      <div className="stagger">
+        {groups.map((g) => (
+          <div
+            key={g.name}
+            ref={(el) => {
+              refs.current[g.name] = el
+            }}
+            style={{ scrollMarginTop: 'calc(var(--topbar-h) + 108px)' }}
+          >
+            <div className="market-group">
+              <div className="market-group__head">
+                <span className="h3">{g.name}</span>
+                {g.name === 'Goalscorers' && <span className="tag tag-cy">Sample data · fictional players</span>}
+                <span className="mono" style={{ marginLeft: 'auto', fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>
+                  {g.markets.reduce((n, x) => n + x.selections.length, 0)} selections
+                </span>
+              </div>
+              {g.markets.map((mk) => (
+                <MarketBlock key={mk.id} market={mk} />
+              ))}
             </div>
-            {g.markets.map((mk) => (
-              <MarketBlock key={mk.id} market={mk} />
-            ))}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <div style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-mute)', lineHeight: 1.6, marginTop: 'var(--s-2)' }}>
         Prices move while the match is in play. If a price moves after you add it, the slip holds it for 5 seconds

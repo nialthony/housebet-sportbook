@@ -5,6 +5,7 @@ import { MatchRow, rowSelections, rowMarketName } from '../components/MatchRow'
 import { SPORT_ICON, IconChevron, IconLive, IconClock, IconStar, IconLock } from '../components/Icons'
 import { fmtUsdt } from '../lib/rand'
 import { useOddsTick } from '../lib/useOddsTick'
+import { Crest } from '../components/Crest'
 
 /* ------------------------------------------------------------------ rail */
 function LiveRail({ matches }: { matches: Match[] }) {
@@ -26,6 +27,7 @@ function LiveRail({ matches }: { matches: Match[] }) {
             {m.period && <span style={{ marginLeft: 'auto' }}>{m.period}</span>}
           </div>
           <div className="rail-card__team" style={{ color: m.scoreHome > m.scoreAway ? 'var(--txt-hi)' : undefined }}>
+            <Crest team={m.home} size={16} />
             {m.home}
           </div>
           <div className="rail-card__score">
@@ -34,6 +36,7 @@ function LiveRail({ matches }: { matches: Match[] }) {
             {m.scoreAway}
           </div>
           <div className="rail-card__team" style={{ color: m.scoreAway > m.scoreHome ? 'var(--txt-hi)' : undefined }}>
+            <Crest team={m.away} size={16} />
             {m.away}
           </div>
         </Link>
@@ -153,11 +156,17 @@ export default function SportsHome() {
           </div>
 
           <div className="scoreline" style={{ justifyContent: 'flex-start' }}>
-            <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.home}</span>
+            <span className="row" style={{ gap: 8 }}>
+              <Crest team={featured.home} size={22} />
+              <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.home}</span>
+            </span>
             <span className="scoreline__n">{featured.scoreHome}</span>
             <span className="scoreline__sep">–</span>
             <span className="scoreline__n">{featured.scoreAway}</span>
-            <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.away}</span>
+            <span className="row" style={{ gap: 8 }}>
+              <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.away}</span>
+              <Crest team={featured.away} size={22} />
+            </span>
           </div>
 
           <div style={{ fontSize: 'var(--fs-12)', color: 'var(--txt-lo)', lineHeight: 1.55 }}>
@@ -277,7 +286,7 @@ export default function SportsHome() {
             Filter by sport <IconChevron size={12} />
           </Link>
         </div>
-        <div className="panel" style={{ overflow: 'hidden' }}>
+        <div className="panel stagger" style={{ overflow: 'hidden' }}>
           {live.slice(0, 6).map((m) => (
             <MatchRow key={m.id} m={m} showComp />
           ))}
@@ -387,7 +396,7 @@ export default function SportsHome() {
             <h2>Following</h2>
             <span className="count">{s.follows.length}</span>
           </div>
-          <div className="panel" style={{ overflow: 'hidden' }}>
+          <div className="panel stagger" style={{ overflow: 'hidden' }}>
             {s.matches
               .filter((m) => s.follows.includes(m.home) || s.follows.includes(m.comp))
               .slice(0, 5)

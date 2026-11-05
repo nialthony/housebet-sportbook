@@ -69,6 +69,7 @@
   --r-pill: 999px;
 
   /* --- motion --- */
+  --crest-sz: 18px;
   --t-fast: 120ms;
   --t-base: 160ms;
   --t-slow: 240ms;
