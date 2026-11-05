@@ -185,3 +185,30 @@
   animation: goalFlash 1200ms var(--ease) both;
   border-radius: 3px;
 }
+
+/* ---- 10. phone slip sheet ---------------------------------------
+   `backwards`, not `both`: the panel sets an inline transform while it is
+   being dragged, and a forwards-filling animation would freeze it at
+   translateY(0) and make the sheet impossible to pull. */
+@keyframes sheetUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+.slip-sheet__panel {
+  animation: sheetUp 300ms var(--ease) backwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.slip-sheet__backdrop {
+  animation: fadeIn 220ms var(--ease) backwards;
+}

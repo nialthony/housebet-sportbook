@@ -245,6 +245,95 @@ check('S13', 'Slip + My bets share one page', samePage, '/bets renders both colu
 
 check('X1', 'No JS errors during audit', jsErrors.length === 0, jsErrors.slice(0, 2).join(' | '))
 
+/* ========================================== 6. EVERYTHING CAN BE CLOSED
+   Added after a toast shipped that could not be dismissed at all: its
+   timer was restarted by every store tick, so only a reload cleared it.
+   Nothing that appears on its own is allowed to be a dead end. */
+
+/** put one bet through so a toast fires. The slip empties after placing,
+ *  so each attempt starts from a fresh pick. Retried because a pick can
+ *  land on a price that moves before the stake box is ready. */
+const fireToastOnce = async () => {
+  await go('/match/m1')
+  const el0 = page.locator('.sel:not([disabled])').first()
+  await el0.evaluate((e) => e.scrollIntoView({ block: 'center' }))
+  await page.waitForTimeout(220)
+  await el0.click(); await page.waitForTimeout(400)
+  await page.evaluate(() => { location.hash = '#/bets' })
+  await page.waitForTimeout(600)
+  const acc = page.getByRole('button', { name: /^Accept/ })
+  if (await acc.count()) { await acc.first().click(); await page.waitForTimeout(400) }
+  const stake = page.locator('.bets-col input[type=text], .bets-col input:not([type])').first()
+  if (await stake.count()) { await stake.fill('25'); await page.waitForTimeout(300) }
+  const place = page.getByRole('button', { name: /^Place/ })
+  if (await place.isDisabled().catch(() => true)) return false
+  await place.click(); await page.waitForTimeout(450)
+  return true
+}
+
+const fireToast = async () => {
+  for (let i = 0; i < 3; i++) {
+    if (await fireToastOnce()) return true
+    await page.waitForTimeout(400)
+  }
+  return false
+}
+
+check('C0', 'A bet can be placed (setup)', await fireToast(), '')
+check('C1', 'Toast appears after placing', (await page.locator('.toast-in').count()) === 1, '')
+
+// auto-dismiss must actually fire — the regression was a timer that reset
+await page.waitForTimeout(6200)
+check('C2', 'Toast clears itself without a reload', (await page.locator('.toast-in').count()) === 0, '<6.5s')
+
+await fireToast()
+const closeBtn = page.getByRole('button', { name: 'Dismiss notification' })
+check('C3', 'Toast has a close button', (await closeBtn.count()) === 1, '')
+if (await closeBtn.count()) { await closeBtn.first().click(); await page.waitForTimeout(600) }
+check('C4', 'Close button removes it', (await page.locator('.toast-in').count()) === 0, '')
+
+// swipe: the gesture a phone owner tries first
+await fireToast()
+const tb = await page.locator('.toast-in').first().boundingBox().catch(() => null)
+if (tb) {
+  await page.mouse.move(tb.x + tb.width - 30, tb.y + tb.height / 2)
+  await page.mouse.down()
+  for (const d of [25, 70, 140, 200]) {
+    await page.mouse.move(tb.x + tb.width - 30 + d, tb.y + tb.height / 2)
+    await page.waitForTimeout(40)
+  }
+  await page.mouse.up(); await page.waitForTimeout(700)
+}
+check('C5', 'Toast is swipe-dismissable', (await page.locator('.toast-in').count()) === 0, 'drag >64px')
+
+// the phone slip sheet must answer every dismissal gesture
+await go('/match/m1', 390, 844)
+const selM = page.locator('.sel:not([disabled])').first()
+await selM.evaluate((e) => e.scrollIntoView({ block: 'center' }))
+await page.waitForTimeout(220)
+await selM.click(); await page.waitForTimeout(450)
+const openSlip = page.getByRole('button', { name: /Open slip/i })
+check('C6', 'Phone slip sheet has an opener', (await openSlip.count()) >= 1, '')
+if (await openSlip.count()) {
+  await openSlip.first().click(); await page.waitForTimeout(500)
+  check('C7', 'Slip sheet opens', (await page.locator('.slip-sheet').count()) === 1, '')
+  await page.keyboard.press('Escape'); await page.waitForTimeout(450)
+  check('C8', 'Slip sheet closes on Escape', (await page.locator('.slip-sheet').count()) === 0, '')
+  await openSlip.first().click(); await page.waitForTimeout(500)
+  const gb = await page.locator('.slip-sheet__panel > div').first().boundingBox().catch(() => null)
+  if (gb) {
+    await page.mouse.move(gb.x + gb.width / 2, gb.y + 12)
+    await page.mouse.down()
+    for (const d of [30, 90, 160, 250]) {
+      await page.mouse.move(gb.x + gb.width / 2, gb.y + 12 + d)
+      await page.waitForTimeout(40)
+    }
+    await page.mouse.up(); await page.waitForTimeout(600)
+  }
+  check('C9', 'Slip sheet closes on pull-down', (await page.locator('.slip-sheet').count()) === 0, '>90px')
+}
+await page.setViewportSize({ width: 1440, height: 900 })
+
 /* ======================================================= REPORT ===== */
 await browser.close()
 const groups = {}
@@ -254,7 +343,7 @@ for (const r of results) {
   groups[k].push(r)
 }
 let pass = 0
-const NAMES = { D: 'WHAT TO DELIVER', H: '1 · SPORTS HOME', L: '2 · LIVE', F: '3 · FOOTBALL', M: '4 · MATCH PAGE', S: '5 · SLIP + MY BETS', X: 'RUNTIME' }
+const NAMES = { D: 'WHAT TO DELIVER', H: '1 · SPORTS HOME', L: '2 · LIVE', F: '3 · FOOTBALL', M: '4 · MATCH PAGE', S: '5 · SLIP + MY BETS', C: '6 · CAN BE CLOSED', X: 'RUNTIME' }
 console.log('\n════ BRIEF COMPLIANCE AUDIT ════\n')
 for (const r of results) {
   if (r.pass) pass++

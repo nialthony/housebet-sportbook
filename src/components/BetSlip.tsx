@@ -723,12 +723,38 @@ function EmptyBets({ text }: { text: string }) {
 }
 
 /* -------------------------------------------- mobile slip bar + sheet */
+const SHEET_DISMISS_PX = 90
+
 export function MobileSlipBar() {
   const { s, totalStake } = useStore()
   const [open, setOpen] = useState(false)
+  const [dy, setDy] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const grabY = useRef(0)
   const nav = useNavigate()
   const n = s.slip.length
 
+  // pull the sheet down to close it. Only the handle starts the drag, so
+  // scrolling the slip itself is never hijacked.
+  const onGrabDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return
+    grabY.current = e.clientY
+    setDragging(true)
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+  }
+  const onGrabMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return
+    setDy(Math.max(0, e.clientY - grabY.current))
+  }
+  const onGrabUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return
+    setDragging(false)
+    setDy(0)
+    // measure from the event, not from state that may be a frame behind
+    if (Math.max(0, e.clientY - grabY.current) > SHEET_DISMISS_PX) setOpen(false)
+  }
+
+  // close on Escape too — every overlay should answer the same key
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
@@ -790,6 +816,7 @@ export function MobileSlipBar() {
 
       {open && (
         <div
+          className="slip-sheet"
           style={{
             position: 'fixed',
             inset: 0,
@@ -800,10 +827,12 @@ export function MobileSlipBar() {
           }}
         >
           <div
+            className="slip-sheet__backdrop"
             onClick={() => setOpen(false)}
             style={{ position: 'absolute', inset: 0, background: 'rgba(3,16,21,0.72)', backdropFilter: 'blur(3px)' }}
           />
           <div
+            className="slip-sheet__panel"
             style={{
               position: 'relative',
               background: 'var(--ink-000)',
@@ -813,25 +842,46 @@ export function MobileSlipBar() {
               height: '86vh',
               display: 'flex',
               flexDirection: 'column',
-              animation: 'none',
+              transform: dragging ? `translateY(${dy}px)` : undefined,
+              transition: dragging ? 'none' : 'transform 280ms var(--ease)',
             }}
           >
+            {/* drag handle: pull down to dismiss, the gesture every phone
+                user tries first on a bottom sheet */}
             <div
+              onPointerDown={onGrabDown}
+              onPointerMove={onGrabMove}
+              onPointerUp={onGrabUp}
+              onPointerCancel={onGrabUp}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '8px 10px',
+                padding: '7px 10px 8px',
                 borderBottom: '1px solid var(--line)',
+                touchAction: 'none',
+                cursor: dragging ? 'grabbing' : 'grab',
               }}
             >
-              <span className="eyebrow">Bet slip</span>
-              <button
-                onClick={() => setOpen(false)}
-                style={{ marginLeft: 'auto', color: 'var(--txt-lo)' }}
-                aria-label="Close bet slip"
-              >
-                <IconClose size={16} />
-              </button>
+              <span
+                aria-hidden
+                style={{
+                  display: 'block',
+                  width: 34,
+                  height: 4,
+                  borderRadius: 2,
+                  background: 'var(--line-3)',
+                  margin: '0 auto 8px',
+                }}
+              />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span className="eyebrow">Bet slip</span>
+                <button
+                  onClick={() => setOpen(false)}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  style={{ marginLeft: 'auto', color: 'var(--txt-lo)' }}
+                  aria-label="Close bet slip"
+                >
+                  <IconClose size={16} />
+                </button>
+              </div>
             </div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
               <BetSlip />

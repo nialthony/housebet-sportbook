@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useStore } from '../state/store'
@@ -16,6 +16,7 @@ import {
   IconStar,
   IconFootball,
   IconChevron,
+  IconClose,
 } from './Icons'
 
 /* ------------------------------------------------------------- wordmark */
@@ -414,42 +415,125 @@ function Toasts() {
         width: 'min(340px, calc(100vw - 24px))',
       }}
     >
-      {s.toasts.map((t) => (
+      {s.toasts.slice(-3).map((t) => (
         <ToastRow key={t.id} t={t} onDone={() => d({ t: 'dropToast', id: t.id })} />
       ))}
     </div>
   )
 }
 
+const SWIPE_DISMISS_PX = 64
+
 function ToastRow({ t, onDone }: { t: import('../state/store').Toast; onDone: () => void }) {
   const [gone, setGone] = useState(false)
+  const [dx, setDx] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const startX = useRef(0)
+  const startT = useRef(0)
+  const done = useRef(onDone)
+  done.current = onDone
+
+  // Schedule ONCE, on mount. `onDone` is a fresh arrow on every parent render
+  // and the store ticks once a second, so depending on it here restarted the
+  // 4.6s timer every second — the toast then never expired at all and could
+  // only be cleared by reloading. Hence the ref and the empty dep list.
   useEffect(() => {
     const a = setTimeout(() => setGone(true), 4600)
-    const b = setTimeout(onDone, 4900)
+    const b = setTimeout(() => done.current(), 4900)
     return () => {
       clearTimeout(a)
       clearTimeout(b)
     }
-  }, [onDone])
+  }, [])
+
+  const finish = () => {
+    setGone(true)
+    setTimeout(() => done.current(), 260)
+  }
+
+  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return
+    startX.current = e.clientX
+    startT.current = Date.now()
+    setDragging(true)
+  }
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return
+    const dist = Math.max(0, e.clientX - startX.current)
+    // capture lazily, past a slop threshold: grabbing on mousedown would
+    // retarget the click away from the close button
+    if (dist > 4) e.currentTarget.setPointerCapture?.(e.pointerId)
+    setDx(dist)
+  }
+  const onUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return
+    setDragging(false)
+    const dist = Math.abs(e.clientX - startX.current)
+    const speed = dist / Math.max(1, Date.now() - startT.current)
+    // a short fast flick counts as much as a long slow drag
+    if (dist > SWIPE_DISMISS_PX || speed > 0.55) finish()
+    else setDx(0)
+  }
+
   const color = t.kind === 'placed' ? 'var(--up)' : t.kind === 'failed' ? 'var(--hot)' : 'var(--cy)'
+  const moved = dx > 0
+
   return (
     <div
       className="toast-in"
+      role="status"
+      aria-live="polite"
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
       style={{
         border: `1px solid ${t.kind === 'failed' ? 'var(--hot-dim)' : 'var(--line-2)'}`,
         borderLeft: `2px solid ${color}`,
         background: 'var(--ink-150)',
         borderRadius: 'var(--r-card)',
         padding: '9px 11px',
-        opacity: gone ? 0 : 1,
-        transform: gone ? 'translateX(8px)' : 'none',
-        transition: 'opacity 280ms var(--ease), transform 280ms var(--ease)',
+        paddingRight: 26,
+        position: 'relative',
+        cursor: dragging ? 'grabbing' : 'grab',
+        touchAction: 'pan-y',
+        userSelect: 'none',
+        opacity: gone ? 0 : moved ? Math.max(0.4, 1 - dx / 240) : 1,
+        transform: gone
+          ? 'translateX(120%)'
+          : moved
+            ? `translateX(${dx}px) rotate(${dx * 0.02}deg)`
+            : 'none',
+        transition: dragging
+          ? 'none'
+          : 'opacity 280ms var(--ease), transform 280ms var(--ease)',
       }}
     >
       <div style={{ fontSize: 'var(--fs-13)', fontWeight: 600, color: 'var(--txt-hi)' }}>{t.title}</div>
       {t.body && (
         <div style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)', marginTop: 2, lineHeight: 1.5 }}>{t.body}</div>
       )}
+      <button
+        onClick={finish}
+        onPointerDown={(e) => e.stopPropagation()}
+        aria-label="Dismiss notification"
+        style={{
+          position: 'absolute',
+          top: 6,
+          right: 6,
+          width: 18,
+          height: 18,
+          display: 'grid',
+          placeItems: 'center',
+          color: 'var(--txt-mute)',
+          borderRadius: 4,
+          border: 'none',
+          background: 'transparent',
+          cursor: 'pointer',
+        }}
+      >
+        <IconClose size={11} />
+      </button>
     </div>
   )
 }
