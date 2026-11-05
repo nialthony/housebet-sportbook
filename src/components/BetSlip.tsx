@@ -227,7 +227,7 @@ function SlipRow({ item }: { item: SlipItem }) {
           </span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 'var(--fs-12)', color: 'var(--hot)', fontWeight: 600 }}>
-              Suspended — {item.changeReason}
+              Suspended: {item.changeReason}
             </div>
             <div style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)', marginTop: 2 }}>
               Kept in your slip at {item.odds.toFixed(2)}. It re-opens when play resumes.
@@ -516,7 +516,7 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
                   Your slip is empty
                 </div>
                 <div style={{ fontSize: 'var(--fs-12)', color: 'var(--txt-lo)', marginTop: 4, lineHeight: 1.5 }}>
-                  Tap any price to add it. Singles only — one stake, one return, settled on-chain.
+                  Tap any price to add it. Singles only. One stake, one return, settled on-chain.
                 </div>
                 <Link
                   to="/live"

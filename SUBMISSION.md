@@ -1,4 +1,4 @@
-# Isian formulir submission — tinggal copy-paste
+# Isian formulir submission (tinggal copy-paste)
 
 **DEADLINE: 14 November 2026, 18:00 UTC** (= 15 Nov 01:00 WIB)
 Diumumkan 5 Nov 2026 — **bukan 26 Nov**. Penghitung di situs: 9 hari 14 jam per 5 Nov.
@@ -30,10 +30,10 @@ Centang **kelimanya**:
 
 ## Kolom 3 — Your big idea  *(80–800 karakter)*
 
-**499 karakter** — pakai ini (lebih ketat dan lebih spesifik dari versi lama 548):
+**497 karakter** — pakai ini (lebih ketat dan lebih spesifik dari versi lama 548):
 
 ```
-Housebets is a pool, not a bookie, so I made the pool visible: every market shows the bankroll backing it, every settled bet keeps its tx hash and confirmations. Then I fixed the moment every sportsbook gets wrong — a price moving under you. You see the old price struck through, why it moved, and a 5-second hold to accept it. Suspended picks stay in your slip with the reason, instead of vanishing. Cash out shows a live mark, not a mystery button. Singles only, USDT, decimal. Shippable tomorrow.
+Housebets is a pool, not a bookie, so I made the pool visible: every market shows the bankroll backing it, every settled bet keeps its tx hash and confirmations. Then I fixed the moment every sportsbook gets wrong: a price moving under you. You see the old price struck through, why it moved, and a 5-second hold to accept it. Suspended picks stay in your slip with the reason instead of vanishing. Cash out shows a live mark, not a mystery button. Singles only, USDT, decimal. Shippable tomorrow.
 ```
 
 Kalau mau pakai versi lama (548 karakter), ada di `README.md`.
@@ -46,7 +46,7 @@ Kolom ini dipakai menyaring AI-slop. Jawaban jujur justru menguntungkan di sini,
 karena tidak ada template/UI kit yang dipakai:
 
 ```
-Hand-coded. No Figma, no v0, no UI kit, no template. React 18 + TypeScript on Vite, CSS written by hand against tokens I measured off your own wireframes (48px rows, 320px side panel, 216px nav). Type is your brand face: Figtree + Red Hat Display, taken from housebets.com/_next/static/media. Club crests are real badges (football-logos, ESPN CDN) plus 11 I drew as SVG for teams that have no badge. Odds engine, state machine, and a 54-assertion Playwright audit are mine. Claude (Arena) as a coding assistant — it wrote no design.
+Hand-coded. No Figma, no v0, no UI kit, no template. React 18 + TypeScript on Vite, CSS written by hand against tokens I measured off your own wireframes (48px rows, 320px side panel, 216px nav). Type is your brand face: Figtree + Red Hat Display, taken from housebets.com/_next/static/media. Club crests are real badges (football-logos, ESPN CDN) plus 11 I drew as SVG for teams that have no badge. Odds engine, state machine, and a 54-assertion Playwright audit are mine. Claude (Arena) worked as a coding assistant. It wrote no design.
 ```
 
 ---

@@ -59,7 +59,7 @@ export function OddsButton({
       data-suspended={sel.suspended}
       disabled={sel.suspended}
       aria-label={`${sel.label} at ${sel.odds.toFixed(2)}${sel.suspended ? ' (suspended)' : ''}`}
-      title={sel.suspended ? `Suspended — ${sel.suspendReason ?? 'market closed'}` : undefined}
+      title={sel.suspended ? `Suspended: ${sel.suspendReason ?? 'market closed'}` : undefined}
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()

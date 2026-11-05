@@ -58,7 +58,7 @@ function MarketBlock({ market }: { market: Market }) {
             style={{ gap: 4, color: 'var(--hot)', fontFamily: 'var(--mono)', fontSize: 'var(--fs-10)' }}
           >
             <IconAlert size={11} />
-            suspended — {reason}
+            suspended: {reason}
           </span>
         )}
         <span style={{ marginLeft: 'auto', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--txt-mute)' }}>

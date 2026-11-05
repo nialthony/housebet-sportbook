@@ -611,7 +611,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           key: x.key,
           reason:
             x.status === 'suspended'
-              ? `${x.marketName} suspended — ${x.changeReason ?? 'market closed'}`
+              ? `${x.marketName} suspended: ${x.changeReason ?? 'market closed'}`
               : `Price moved to ${x.odds.toFixed(2)} before the pool could match it`,
         }))
 

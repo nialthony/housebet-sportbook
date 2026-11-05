@@ -122,7 +122,7 @@ export function PausedBanner() {
       }}
     >
       <IconAlert size={13} />
-      <span style={{ fontWeight: 600 }}>Prices paused — reconnecting to the pool.</span>
+      <span style={{ fontWeight: 600 }}>Prices paused. Reconnecting to the pool.</span>
       <span style={{ color: 'var(--txt-lo)' }}>
         Nothing can be placed until the feed is back. Your slip keeps its selections.
       </span>

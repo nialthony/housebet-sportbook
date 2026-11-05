@@ -174,7 +174,7 @@ export default function SportsHome() {
             <span className="mono" style={{ color: 'var(--txt-hi)' }}>
               {fmtUsdt(featured.markets?.[0]?.exposure ?? 0)} USDT
             </span>{' '}
-            deep on the match result — payouts are guaranteed by the pool, not by a bookie's balance sheet.
+            deep on the match result. Payouts are guaranteed by the pool, not by a bookie's balance sheet.
           </div>
 
           <div className="hero__prices">
@@ -409,7 +409,7 @@ export default function SportsHome() {
 
       <div className="row" style={{ gap: 6, paddingTop: 'var(--s-2)', fontSize: 'var(--fs-11)', color: 'var(--txt-mute)' }}>
         <IconClock size={12} />
-        Prices move with the pool. Sample data — fictional players, no real money.
+        Prices move with the pool. Sample data: fictional players, no real money.
       </div>
 
       <style>{`

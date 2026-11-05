@@ -5,15 +5,18 @@ React + TypeScript + Vite. No backend. Sample data only.
 
 ---
 
-## 1. The big idea (submission text, 538 chars)
+## 1. The big idea (submission text)
 
-> Housebets isn't a bookie with a crypto checkout — the house is a pool, and pools
+The version to paste is in `SUBMISSION.md` (497 chars). This older one is kept
+only as a fallback:
+
+> Housebets isn't a bookie with a crypto checkout. The house is a pool, and pools
 > can be seen. So I made it visible: every market shows the bankroll backing it,
 > every settled bet keeps its tx hash and block confirmations. Then I fixed the part
 > every sportsbook gets wrong. When a price moves you see the old price struck
 > through, the reason it moved, and a 5-second hold to accept it. Suspended
 > selections stay in place with the cause instead of vanishing. Cash out is a live
-> mark, not a mystery button. Singles, USDT, on-chain — shippable tomorrow.
+> mark, not a mystery button. Singles, USDT, on-chain, shippable tomorrow.
 
 **Tools:** hand-written React + TypeScript, Vite, no UI kit, no template.
 Fonts: Figtree + Red Hat Display — the two faces the live Housebets build actually
