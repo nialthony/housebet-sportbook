@@ -13,6 +13,13 @@ function LockRing({ until }: { until: number }) {
   const pct = Math.max(0, Math.min(1, left / 5000))
   const r = 9
   const c = 2 * Math.PI * r
+  if (left <= 0) {
+    return (
+      <span className="mono" style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>
+        Hold ended · live pool price
+      </span>
+    )
+  }
   return (
     <span
       style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--hot)' }}
@@ -114,7 +121,7 @@ function StakeInput({ item, all }: { item: SlipItem; all?: boolean }) {
         ))}
         <button
           className="pill"
-          style={{ height: 22, fontSize: 'var(--fs-11)', padding: '0 8px', marginLeft: 'auto' }}
+          style={{ height: 22, fontSize: 'var(--fs-11)', padding: '0 8px' }}
           onClick={() => {
             const others = s.slip.filter((x) => x.key !== item.key).reduce((n, x) => n + (Number(x.stake) || 0), 0)
             const v = Math.max(0, s.balance - others).toFixed(2)
@@ -124,6 +131,11 @@ function StakeInput({ item, all }: { item: SlipItem; all?: boolean }) {
         >
           Max
         </button>
+        {Number(item.stake) > 0 && (
+          <span className="mono" style={{ marginLeft: 'auto', fontSize: 'var(--fs-11)', color: 'var(--txt-lo)', alignSelf: 'center' }}>
+            Returns <b style={{ color: 'var(--up)' }}>{fmtUsdt(Number(item.stake) * item.odds)}</b>
+          </span>
+        )}
       </div>
     </div>
   )
@@ -147,8 +159,20 @@ function SlipRow({ item }: { item: SlipItem }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 'var(--fs-13)', color: 'var(--txt-hi)', fontWeight: 600 }}>{item.label}</div>
-          <div style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
-            {item.marketName} · <FixtureLine fixture={item.fixture} />
+          <div
+            style={{
+              fontSize: 'var(--fs-11)',
+              color: 'var(--txt-lo)',
+              marginTop: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              flexWrap: 'wrap',
+            }}
+          >
+            <span>{item.marketName}</span>
+            <span style={{ color: 'var(--txt-mute)' }}>·</span>
+            <FixtureLine fixture={item.fixture} />
           </div>
         </div>
         <OddsCell item={item} />
@@ -186,6 +210,16 @@ function SlipRow({ item }: { item: SlipItem }) {
             </span>
             <span style={{ color: 'var(--txt-mute)', fontSize: 11 }}>→</span>
             <OddsCell item={item} />
+            <span
+              className="mono"
+              style={{
+                fontSize: 'var(--fs-10)',
+                color: item.odds > item.oddsAtAdd ? 'var(--up)' : 'var(--hot)',
+                fontWeight: 600,
+              }}
+            >
+              {item.odds > item.oddsAtAdd ? '▲ lengthened' : '▼ shortened'}
+            </span>
             <span style={{ marginLeft: 'auto' }}>
               {item.lockUntil ? <LockRing until={item.lockUntil} /> : null}
             </span>
@@ -436,7 +470,7 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
 
   const blocked = s.slip.some((x) => x.status === 'suspended')
   const needsAction = s.slip.filter((x) => x.status === 'changed').length
-  const canPlace = s.slip.length > 0 && totalStake > 0 && !blocked
+  const canPlace = s.slip.length > 0 && totalStake > 0 && !blocked && needsAction === 0
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
@@ -574,7 +608,18 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
                 }}
               >
                 <IconAlert size={13} />
-                {needsAction} price{needsAction > 1 ? 's' : ''} moved. Accept to place at the new price.
+                <span style={{ flex: 1 }}>
+                  {needsAction} price{needsAction > 1 ? 's' : ''} moved. Accept to place at the new price.
+                </span>
+                {needsAction > 1 && (
+                  <button
+                    className="pill"
+                    style={{ height: 22, fontSize: 'var(--fs-10)', color: 'var(--txt-hi)', borderColor: 'var(--hot)' }}
+                    onClick={() => d({ t: 'acceptAllChanges' })}
+                  >
+                    Accept all
+                  </button>
+                )}
               </div>
             )}
             {blocked && (

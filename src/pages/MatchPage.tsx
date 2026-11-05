@@ -47,22 +47,31 @@ function SelButton({ marketName, sel, label }: { marketName: string; sel: Select
 /* --------------------------------------------------------------- market */
 function MarketBlock({ market }: { market: Market }) {
   const allSuspended = market.selections.every((x) => x.suspended)
+  const someSuspended = !allSuspended && market.selections.some((x) => x.suspended)
   const reason = market.selections.find((x) => x.suspendReason)?.suspendReason
   return (
     <div className="market">
       <div className="market__name">
-        <span style={{ color: 'var(--txt)' }}>{market.name}</span>
+        <span style={{ color: 'var(--txt-hi)', fontWeight: 500 }}>{market.name}</span>
         {allSuspended && (
           <span
-            className="row"
-            style={{ gap: 4, color: 'var(--hot)', fontFamily: 'var(--mono)', fontSize: 'var(--fs-10)' }}
+            className="row mono"
+            style={{ gap: 4, color: 'var(--hot)', fontSize: 'var(--fs-10)' }}
           >
             <IconAlert size={11} />
             suspended: {reason}
           </span>
         )}
-        <span style={{ marginLeft: 'auto', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--txt-mute)' }}>
-          HOUSE {fmtUsdt(market.exposure)}
+        {someSuspended && (
+          <span
+            className="row mono"
+            style={{ gap: 4, color: 'var(--txt-lo)', fontSize: 'var(--fs-10)' }}
+          >
+            1 selection suspended ({reason})
+          </span>
+        )}
+        <span className="mono" style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--txt-mute)' }}>
+          HOUSE <span style={{ color: 'var(--txt-lo)' }}>{fmtUsdt(market.exposure)}</span> USDT
         </span>
       </div>
       <div
@@ -141,25 +150,25 @@ export default function MatchPage() {
       {/* ---------------------------------------------------- scoreboard */}
       <div className="match-head">
         <div className="scoreboard">
-          <div style={{ textAlign: 'left', minWidth: 0 }}>
-            <div className="row" style={{ gap: 8 }}>
-              <Crest team={m.home} size={40} />
+          <div className="scoreboard__side">
+            <div className="scoreboard__badges">
+              <Crest team={m.home} size={36} />
               <span className="team-code">{teamCode(m.home)}</span>
-              <div style={{ minWidth: 0 }}>
-                <div className="h2" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {m.home}
-                </div>
-                <div className="row" style={{ gap: 6, marginTop: 4 }}>
-                  <span className="mono" style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
-                    {m.markets?.[0]?.selections[0]?.odds.toFixed(2) ?? '–'}
-                  </span>
-                  <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>implied favourite</span>
-                </div>
+            </div>
+            <div className="scoreboard__meta">
+              <div className="h2" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {m.home}
+              </div>
+              <div className="row" style={{ gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
+                <span className="mono" style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
+                  {m.markets?.[0]?.selections[0]?.odds.toFixed(2) ?? '–'}
+                </span>
+                <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>implied favourite</span>
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: '0 4px' }}>
             <div className="row" style={{ gap: 6 }}>
               {m.status === 'live' && <span className="live-dot" />}
               <span
@@ -178,32 +187,32 @@ export default function MatchPage() {
               <span className="scoreline__sep">–</span>
               <span className="scoreline__n">{m.scoreAway}</span>
             </div>
-            <div className="mono" style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>
+            <div className="mono" style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)', textAlign: 'center' }}>
               {m.comp}
               {m.period ? ` · ${m.period}` : ''}
             </div>
           </div>
 
-          <div style={{ textAlign: 'right', minWidth: 0 }}>
-            <div className="row" style={{ gap: 8, justifyContent: 'flex-end' }}>
-              <div style={{ minWidth: 0 }}>
-                <div className="h2" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {m.away}
-                </div>
-                <div className="row" style={{ gap: 6, marginTop: 4, justifyContent: 'flex-end' }}>
-                  <button
-                    onClick={() => d({ t: 'toggleFollow', key: m.home })}
-                    className="row"
-                    style={{ gap: 4, fontSize: 'var(--fs-11)', color: followed ? 'var(--hot)' : 'var(--txt-lo)' }}
-                    aria-pressed={followed}
-                  >
-                    <IconStar size={12} filled={followed} />
-                    {followed ? 'Following' : 'Follow'}
-                  </button>
-                </div>
+          <div className="scoreboard__side scoreboard__side--away">
+            <div className="scoreboard__meta">
+              <div className="h2" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {m.away}
               </div>
+              <div className="row" style={{ gap: 6, marginTop: 3, justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => d({ t: 'toggleFollow', key: m.home })}
+                  className="row"
+                  style={{ gap: 4, fontSize: 'var(--fs-11)', color: followed ? 'var(--hot)' : 'var(--txt-lo)' }}
+                  aria-pressed={followed}
+                >
+                  <IconStar size={12} filled={followed} />
+                  {followed ? 'Following' : 'Follow'}
+                </button>
+              </div>
+            </div>
+            <div className="scoreboard__badges">
               <span className="team-code">{teamCode(m.away)}</span>
-              <Crest team={m.away} size={40} />
+              <Crest team={m.away} size={36} />
             </div>
           </div>
         </div>
@@ -349,6 +358,7 @@ export default function MatchPage() {
                 <span className="h3">{g.name}</span>
                 {g.name === 'Goalscorers' && <span className="tag tag-cy">Sample data · fictional players</span>}
                 <span className="mono" style={{ marginLeft: 'auto', fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>
+                  POOL <span style={{ color: 'var(--txt-lo)' }}>{fmtUsdt(g.markets.reduce((n, x) => n + x.exposure, 0))}</span> ·{' '}
                   {g.markets.reduce((n, x) => n + x.selections.length, 0)} selections
                 </span>
               </div>

@@ -56,8 +56,8 @@ function LedgerRow({ bet }: { bet: Bet }) {
           gridTemplateColumns: GRID,
           gap: 'var(--s-2)',
           alignItems: 'center',
-          height: 52,
-          padding: '0 var(--s-3)',
+          minHeight: 52,
+          padding: '8px var(--s-3) 6px',
           opacity: bet.status === 'lost' ? 0.6 : 1,
         }}
         className="ledger-row"
@@ -74,12 +74,15 @@ function LedgerRow({ bet }: { bet: Bet }) {
             style={{
               fontSize: 'var(--fs-11)',
               color: 'var(--txt-lo)',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+              minWidth: 0,
+              marginTop: 2,
             }}
           >
-            {bet.marketName} · <FixtureLine fixture={bet.fixture} />
+            <span style={{ whiteSpace: 'nowrap' }}>{bet.marketName} ·</span>
+            <FixtureLine fixture={bet.fixture} />
           </div>
         </div>
 
@@ -143,8 +146,7 @@ function LedgerRow({ bet }: { bet: Bet }) {
           display: 'flex',
           alignItems: 'center',
           gap: 8,
-          padding: '0 var(--s-3) 8px',
-          marginTop: -6,
+          padding: '0 var(--s-3) 9px',
           flexWrap: 'wrap',
         }}
       >
@@ -203,7 +205,7 @@ export default function BetsPage() {
     return Date.now() - b.placedAt <= f.days * 86400_000
   }
 
-  const all = s.bets.filter(withinDays)
+  const all = s.bets.filter(withinDays).filter((b) => sportF === 'all' || b.comp === sportF)
   const open = all.filter((b) => b.status === 'open' && b.outcome === 'placed')
   const settled = all.filter((b) => b.status !== 'open' && b.outcome === 'placed')
   const failed = all.filter((b) => b.outcome === 'failed')

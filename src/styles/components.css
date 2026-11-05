@@ -4,6 +4,7 @@
 .sec {
   margin-bottom: var(--s-8);
 }
+
 .sec-head {
   display: flex;
   align-items: center;
@@ -12,12 +13,14 @@
   margin-bottom: var(--s-2);
   border-bottom: 1px solid var(--line);
 }
+
 .sec-head h2 {
   font-size: var(--fs-15);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--txt-hi);
 }
+
 .sec-head .count {
   font-family: var(--num);
   font-size: var(--fs-11);
@@ -39,10 +42,12 @@
   background: var(--ink-100);
   transition: background var(--t-fast) var(--ease);
 }
+
 .mrow:hover {
   background: var(--ink-150);
 }
-.mrow > * {
+
+.mrow>* {
   min-width: 0;
 }
 
@@ -55,6 +60,7 @@
   gap: 5;
   gap: 5px;
 }
+
 .mrow__time b {
   font-weight: 600;
   color: var(--txt-hi);
@@ -67,6 +73,7 @@
   padding-left: var(--s-2);
   overflow: hidden;
 }
+
 .mrow__team {
   font-size: var(--fs-13);
   color: var(--txt-hi);
@@ -78,19 +85,23 @@
   align-items: center;
   gap: 6px;
 }
+
 .mrow__team img,
 .mrow__team svg {
   display: block;
 }
+
 .mrow__team.away {
   color: var(--txt);
 }
+
 .mrow__vs {
   font-family: var(--num);
   font-size: var(--fs-10);
   color: var(--txt-mute);
   flex: 0 0 auto;
 }
+
 .mrow__score {
   font-family: var(--num);
   font-size: var(--fs-13);
@@ -106,6 +117,7 @@
   gap: 4px;
   justify-content: end;
 }
+
 .mrow__act {
   display: flex;
   align-items: center;
@@ -119,6 +131,7 @@
 
 /* -------- phone: two-line row -------- */
 @media (max-width: 700px) {
+
   /* Teams take a full-width line and the prices drop below them.
      The old 3-column row left the names only 119px at 390px, where 22 of
      34 club names were already ellipsised before crests existed at all —
@@ -126,6 +139,7 @@
   :root {
     --crest-sz: 16px;
   }
+
   .mrow {
     grid-template-columns: 1fr auto;
     grid-template-areas: 'teams star' 'odds time';
@@ -134,34 +148,41 @@
     gap: 4px var(--s-2);
     align-items: center;
   }
+
   .mrow__time {
     grid-area: time;
     justify-self: end;
   }
+
   .mrow__teams {
     grid-area: teams;
     padding-left: 0;
     min-width: 0;
   }
+
   .mrow__odds {
     grid-area: odds;
     justify-self: start;
     align-self: center;
   }
+
   .mrow__act {
     grid-area: star;
     align-self: center;
   }
+
   .mrow__team {
     font-size: var(--fs-12);
     min-width: 0;
     gap: 5px;
   }
+
   /* the period ("Set 4") is secondary — the clock on the same row already
      says how far the match has gone, and it is the first thing to drop */
   .mrow__period {
     display: none;
   }
+
   .odds {
     width: 52px;
     flex: 0 0 52px;
@@ -186,6 +207,7 @@
   top: var(--topbar-h);
   z-index: 4;
 }
+
 .comp-head__name {
   display: flex;
   align-items: center;
@@ -195,6 +217,7 @@
   color: var(--txt-hi);
   letter-spacing: -0.01em;
 }
+
 .comp-head__cols {
   font-family: var(--num);
   font-size: var(--fs-10);
@@ -202,11 +225,13 @@
   width: var(--odds-w);
   text-align: center;
 }
+
 @media (max-width: 700px) {
   .comp-head {
     display: flex;
     padding: 0 var(--s-2);
   }
+
   .comp-head__cols {
     display: none;
   }
@@ -220,6 +245,7 @@
   grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   gap: var(--s-2);
 }
+
 .comp-card {
   border: 1px solid var(--line);
   border-radius: var(--r-card);
@@ -228,10 +254,12 @@
   text-align: left;
   transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
 }
+
 .comp-card:hover {
   border-color: var(--line-3);
   background: var(--ink-100);
 }
+
 .comp-card__badge {
   width: 26px;
   height: 26px;
@@ -263,9 +291,11 @@
   scroll-snap-type: x proximity;
   scrollbar-width: thin;
 }
-.rail > * {
+
+.rail>* {
   scroll-snap-align: start;
 }
+
 .rail-card {
   flex: 0 0 176px;
   border: 1px solid var(--line-2);
@@ -278,10 +308,12 @@
   gap: 7px;
   transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
 }
+
 .rail-card:hover {
   border-color: var(--line-3);
   background: var(--ink-100);
 }
+
 .rail-card__top {
   display: flex;
   align-items: center;
@@ -290,6 +322,7 @@
   font-size: 9px;
   color: var(--txt-mute);
 }
+
 .rail-card__score {
   font-family: var(--display);
   font-variant-numeric: tabular-nums lining-nums;
@@ -300,6 +333,7 @@
   color: var(--txt-hi);
   line-height: 1;
 }
+
 .rail-card__team {
   font-size: var(--fs-11);
   color: var(--txt);
@@ -310,6 +344,7 @@
   align-items: center;
   gap: 6px;
 }
+
 .rail-card__team img,
 .rail-card__team svg {
   display: block;
@@ -318,17 +353,20 @@
 .hero {
   border: 1px solid var(--line-2);
   border-radius: var(--r-card);
-  background: linear-gradient(180deg, var(--ink-150), var(--ink-050));
+  background: var(--ink-150);
+  box-shadow: inset 0 1px 0 var(--line-2);
   padding: var(--s-4);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
 }
+
 .hero__prices {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
+
 .hero__price {
   display: flex;
   align-items: center;
@@ -341,15 +379,18 @@
   font-size: var(--fs-12);
   color: var(--txt-hi);
 }
+
 .hero__price:hover:not(:disabled) {
   border-color: var(--line-3);
   background: var(--ink-250);
 }
+
 .hero__price[data-sel='true'] {
   border-color: var(--cy);
   background: var(--cy-dim);
   color: #eafeff;
 }
+
 .hero__price[data-susp='true'] {
   background: transparent;
   border-color: var(--line);
@@ -357,36 +398,43 @@
   cursor: not-allowed;
   text-decoration: line-through;
 }
+
 @keyframes hpUp {
   0% {
     background: var(--up-wash);
     border-color: var(--up);
     color: var(--up);
   }
+
   100% {
     background: var(--ink-200);
     border-color: var(--line-2);
     color: var(--txt-hi);
   }
 }
+
 @keyframes hpDn {
   0% {
     background: var(--hot-wash);
     border-color: var(--hot);
     color: var(--hot);
   }
+
   100% {
     background: var(--ink-200);
     border-color: var(--line-2);
     color: var(--txt-hi);
   }
 }
+
 .hero__price.tick-up {
   animation: hpUp 900ms var(--ease);
 }
+
 .hero__price.tick-dn {
   animation: hpDn 900ms var(--ease);
 }
+
 .hero__score {
   font-family: var(--display);
   font-variant-numeric: tabular-nums lining-nums;
@@ -397,6 +445,7 @@
   color: var(--txt-hi);
   line-height: 1;
 }
+
 .filter-bar {
   display: flex;
   align-items: center;
@@ -405,6 +454,7 @@
   padding-bottom: 2px;
   scrollbar-width: none;
 }
+
 .filter-bar::-webkit-scrollbar {
   display: none;
 }
@@ -421,26 +471,54 @@
   scroll-margin-top: calc(var(--topbar-h) + 64px);
   scroll-margin-bottom: 80px;
 }
+
 .match-head {
   border: 1px solid var(--line);
   border-radius: var(--r-card);
   background: var(--ink-150);
   overflow: hidden;
 }
+
 .scoreboard {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: var(--s-3);
   padding: var(--s-5) var(--s-4) var(--s-4);
   border-bottom: 1px solid var(--line);
 }
+
+.scoreboard__side {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.scoreboard__side--away {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.scoreboard__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: 0 0 auto;
+}
+
+.scoreboard__meta {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .scoreline {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--s-4);
 }
+
 .scoreline__n {
   font-family: var(--display);
   font-variant-numeric: tabular-nums lining-nums;
@@ -451,17 +529,44 @@
   color: var(--txt-hi);
   line-height: 1;
 }
+
 .scoreline__sep {
   font-family: var(--num);
   font-size: var(--fs-26);
   color: var(--txt-mute);
 }
-@media (max-width: 560px) {
+
+@media (max-width: 640px) {
+  .scoreline {
+    gap: var(--s-2);
+  }
+
   .scoreline__n {
     font-size: var(--fs-34);
   }
+
   .scoreboard {
-    padding: var(--s-4) var(--s-3) var(--s-3);
+    padding: var(--s-3);
+    gap: var(--s-2);
+    align-items: start;
+  }
+
+  .scoreboard__side {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .scoreboard__side--away {
+    align-items: flex-end;
+  }
+
+  .scoreboard__side--away .scoreboard__badges {
+    flex-direction: row-reverse;
+  }
+
+  .scoreboard__meta .h2 {
+    font-size: var(--fs-15);
   }
 }
 
@@ -472,25 +577,25 @@
   margin-bottom: var(--s-3);
   overflow: hidden;
 }
-/* Sticks BELOW the sticky group filter bar, not on top of it. */
+
 .market-group__head {
   display: flex;
   align-items: center;
   gap: var(--s-2);
-  height: 36px;
+  height: 38px;
   padding: 0 var(--s-3);
   background: var(--ink-100);
   border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: calc(var(--topbar-h) + 44px);
-  z-index: 3;
 }
+
 .market {
   border-bottom: 1px solid var(--line);
 }
+
 .market:last-child {
   border-bottom: 0;
 }
+
 .market__name {
   display: flex;
   align-items: baseline;
@@ -499,15 +604,18 @@
   font-size: var(--fs-12);
   color: var(--txt-lo);
 }
+
 .sel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
   gap: 5px;
   padding: 0 var(--s-3) var(--s-3);
 }
+
 .sel-grid--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+
 .sel {
   position: relative;
   display: flex;
@@ -523,26 +631,31 @@
   font-size: var(--fs-12);
   transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
 }
+
 .sel:hover:not(:disabled) {
   background: var(--ink-250);
   border-color: var(--line-3);
 }
+
 .sel[data-sel='true'] {
   background: var(--cy-dim);
   border-color: var(--cy);
   color: #eafeff;
 }
+
 .sel[data-susp='true'] {
   background: transparent;
   border-color: var(--line);
   color: var(--txt-mute);
   cursor: not-allowed;
 }
+
 .sel__label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .sel__strike {
   position: absolute;
   left: 8px;
@@ -552,33 +665,39 @@
   background: var(--txt-mute);
   transform: rotate(-2deg);
 }
+
 @keyframes selUp {
   0% {
     background: var(--up-wash);
     border-color: var(--up);
     color: var(--up);
   }
+
   100% {
     background: var(--ink-200);
     border-color: var(--line-2);
     color: var(--txt-hi);
   }
 }
+
 @keyframes selDn {
   0% {
     background: var(--hot-wash);
     border-color: var(--hot);
     color: var(--hot);
   }
+
   100% {
     background: var(--ink-200);
     border-color: var(--line-2);
     color: var(--txt-hi);
   }
 }
+
 .sel.tick-up {
   animation: selUp 900ms var(--ease);
 }
+
 .sel.tick-dn {
   animation: selDn 900ms var(--ease);
 }
@@ -592,11 +711,13 @@
   gap: var(--s-4);
   align-items: start;
 }
+
 @media (max-width: 1080px) {
   .bets-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
 .bets-col {
   border: 1px solid var(--line);
   border-radius: var(--r-card);
@@ -608,6 +729,7 @@
   position: sticky;
   top: var(--topbar-h);
 }
+
 @media (max-width: 1080px) {
   .bets-col {
     height: auto;
@@ -629,6 +751,7 @@
   margin-bottom: var(--s-4);
   background: var(--ink-050);
 }
+
 .simbar .eyebrow {
   color: var(--cy);
 }
@@ -641,12 +764,14 @@
   align-items: center;
   gap: var(--s-2);
 }
+
 .spread {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-2);
 }
+
 .kbd {
   font-family: var(--num);
   font-size: 10px;
@@ -657,16 +782,42 @@
   color: var(--txt-lo);
   background: var(--ink-150);
 }
+
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 4px 6px;
   font-size: var(--fs-11);
   color: var(--txt-mute);
   margin-bottom: var(--s-3);
 }
+
+.breadcrumb a,
+.breadcrumb span {
+  white-space: nowrap;
+}
+
 .breadcrumb a:hover {
   color: var(--txt-hi);
+}
+
+@media (min-width: 1181px) {
+  .slip-bar {
+    display: none !important;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1180px) {
+  .slip-bar {
+    bottom: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .search__kbd {
+    display: none !important;
+  }
 }
 
 /* team code badge, e.g. ARS / BHA — from the wireframe scoreboard */

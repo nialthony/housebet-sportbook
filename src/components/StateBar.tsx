@@ -7,24 +7,18 @@ import { IconAlert, IconLock } from './Icons'
  *  should never have to wait for the simulation to produce one. This bar makes
  *  each state one click away, and lives on the two surfaces where states
  *  actually happen: the match page and the slip. */
-export function StateBar({ matchId }: { matchId?: string }) {
-  const { s, d } = useStore()
-  const first = s.slip[0]
-  const hasSlip = s.slip.length > 0
-  const mid = matchId ?? first?.matchId ?? s.matches[0].id
-  const marketName = s.matches.find((x) => x.id === mid)?.markets?.[0]?.name ?? 'Match result'
-
-  const B = ({
-    children,
-    onClick,
-    disabled,
-    title,
-  }: {
-    children: React.ReactNode
-    onClick: () => void
-    disabled?: boolean
-    title?: string
-  }) => (
+function SimButton({
+  children,
+  onClick,
+  disabled,
+  title,
+}: {
+  children: React.ReactNode
+  onClick: () => void
+  disabled?: boolean
+  title?: string
+}) {
+  return (
     <button
       className="pill"
       onClick={onClick}
@@ -35,6 +29,15 @@ export function StateBar({ matchId }: { matchId?: string }) {
       {children}
     </button>
   )
+}
+
+export function StateBar({ matchId }: { matchId?: string }) {
+  const { s, d } = useStore()
+  const first = s.slip[0]
+  const hasSlip = s.slip.length > 0
+  const mid = matchId ?? first?.matchId ?? s.matches[0].id
+  const marketName = s.matches.find((x) => x.id === mid)?.markets?.[0]?.name ?? 'Match result'
+  const B = SimButton
 
   return (
     <div className="simbar">

@@ -704,11 +704,153 @@ const RAW: RawMatch[] = [
   },
 ]
 
+const FICTIONAL_HOME_SQUAD = [
+  'K. Lindholm',
+  'M. Varga',
+  'T. Castellano',
+  'R. Okafor',
+  'A. Solberg',
+  'D. Kovač',
+]
+const FICTIONAL_AWAY_SQUAD = [
+  'J. Moreau',
+  'L. Santoro',
+  'S. Belkacem',
+  'N. Halvorsen',
+  'O. Mensah',
+  'C. Dragomir',
+]
+
+function genericMatchMarkets(m: RawMatch, idx: number): Market[] {
+  const o1 = m.odds?.[0] ?? 1.9
+  const oX = m.odds?.length === 3 ? m.odds[1] : 3.4
+  const o2 = m.odds?.length === 3 ? m.odds[2] : (m.odds?.[1] ?? 2.0)
+  const baseExp = Math.max(18_400, 94_000 - idx * 2_900)
+  const mk = <T extends Omit<Market, 'id'>>(x: T): Market => ({ id: uid('m'), ...x })
+  const list: Market[] = [
+    mk({
+      group: 'Popular',
+      name: m.odds?.length === 2 ? 'Moneyline' : 'Match result',
+      selections:
+        m.odds?.length === 2
+          ? [sel(m.home, o1), sel(m.away, o2)]
+          : [sel(m.home, o1), sel('Draw', oX), sel(m.away, o2)],
+      exposure: baseExp,
+    }),
+    mk({
+      group: 'Popular',
+      name: 'Double chance',
+      selections: [
+        sel(`${m.home} or draw`, Math.max(1.08, +(o1 * 0.72).toFixed(2))),
+        sel(`Draw or ${m.away}`, Math.max(1.18, +(o2 * 0.64).toFixed(2))),
+      ],
+      exposure: Math.round(baseExp * 0.42),
+    }),
+    mk({
+      group: 'Popular',
+      name: 'Both teams to score',
+      selections: [sel('Yes', 1.78), sel('No', 2.02)],
+      exposure: Math.round(baseExp * 0.56),
+    }),
+    mk({
+      group: 'Goals',
+      name: 'Total goals',
+      cols: ['Over', 'Under'],
+      selections: [
+        sel('Over 1.5', 1.3),
+        sel('Under 1.5', 3.45),
+        sel('Over 2.5', 1.88),
+        sel('Under 2.5', 1.92),
+        sel('Over 3.5', 3.15),
+        sel('Under 3.5', 1.35),
+      ],
+      exposure: Math.round(baseExp * 1.15),
+    }),
+    mk({
+      group: 'Goals',
+      name: 'Next goal',
+      selections: [
+        sel(m.home, Math.max(1.4, +(o1 * 0.92).toFixed(2))),
+        sel('No goal', 9.5),
+        sel(m.away, Math.max(1.7, +(o2 * 0.88).toFixed(2))),
+      ],
+      exposure: Math.round(baseExp * 0.31),
+    }),
+    mk({
+      group: 'Halves',
+      name: 'Half-time result',
+      selections: [
+        sel(m.home, Math.max(1.75, +(o1 * 1.25).toFixed(2))),
+        sel('Draw', 2.25),
+        sel(m.away, Math.max(2.1, +(o2 * 1.2).toFixed(2))),
+      ],
+      exposure: Math.round(baseExp * 0.28),
+    }),
+    mk({
+      group: 'Halves',
+      name: 'Second half total goals',
+      cols: ['Over', 'Under'],
+      selections: [
+        sel('Over 0.5', 1.24),
+        sel('Under 0.5', 4.0),
+        sel('Over 1.5', 2.15),
+        sel('Under 1.5', 1.68),
+      ],
+      exposure: Math.round(baseExp * 0.34),
+    }),
+    mk({
+      group: 'Handicaps',
+      name: 'Asian handicap',
+      cols: ['Home', 'Away'],
+      selections: [
+        sel(`${m.home} −0.5`, o1),
+        sel(`${m.away} +0.5`, Math.max(1.35, +(o2 * 0.78).toFixed(2))),
+        sel(`${m.home} −1.5`, Math.max(1.85, +(o1 * 1.48).toFixed(2))),
+        sel(`${m.away} +1.5`, 1.42),
+      ],
+      exposure: Math.round(baseExp * 0.62),
+    }),
+    mk({
+      group: 'Goalscorers',
+      name: 'Anytime goalscorer',
+      selections: [
+        ...FICTIONAL_HOME_SQUAD.slice(0, 4).map((p) => sel(p, 0)),
+        ...FICTIONAL_AWAY_SQUAD.slice(0, 4).map((p) => sel(p, 0)),
+      ],
+      exposure: Math.round(baseExp * 0.22),
+    }),
+    mk({
+      group: 'Corners & cards',
+      name: 'Total corners',
+      cols: ['Over', 'Under'],
+      selections: [
+        sel('Over 8.5', 1.72),
+        sel('Under 8.5', 2.08),
+        sel('Over 10.5', 2.85),
+        sel('Under 10.5', 1.42),
+      ],
+      exposure: Math.round(baseExp * 0.19),
+    }),
+    mk({
+      group: 'Corners & cards',
+      name: 'Total cards',
+      cols: ['Over', 'Under'],
+      selections: [
+        sel('Over 3.5', 1.82),
+        sel('Under 3.5', 1.98),
+      ],
+      exposure: Math.round(baseExp * 0.15),
+    }),
+  ]
+  priceGoalscorers(list)
+  return list
+}
+
 let mid = 0
-export const MATCHES: Match[] = RAW.map((m) => ({
+export const MATCHES: Match[] = RAW.map((m, idx) => ({
   ...m,
   id: m.id ?? `m${++mid}`,
-  markets: m.markets ?? [],
+  markets: m.markets && m.markets.length > 0 ? m.markets : genericMatchMarkets(m, idx),
   minute: m.minute ?? 0,
 }))
 

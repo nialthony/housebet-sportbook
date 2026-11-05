@@ -54,15 +54,16 @@ export function Search({ compact }: { compact?: boolean }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
+          gap: 6,
           height: 32,
-          padding: '0 8px 0 10px',
+          padding: '0 8px 0 9px',
           background: 'var(--ink-150)',
           border: '1px solid var(--line-2)',
           borderRadius: 'var(--r-row)',
+          overflow: 'hidden',
         }}
       >
-        <span style={{ color: 'var(--txt-lo)', display: 'flex' }}>
+        <span style={{ color: 'var(--txt-lo)', display: 'flex', flex: '0 0 auto' }}>
           <IconSearch size={14} />
         </span>
         <input
@@ -78,12 +79,14 @@ export function Search({ compact }: { compact?: boolean }) {
           aria-label="Search"
           style={{
             flex: 1,
+            width: '100%',
             minWidth: 0,
             border: 0,
             outline: 0,
             background: 'none',
             color: 'var(--txt-hi)',
             fontSize: 'var(--fs-13)',
+            textOverflow: 'ellipsis',
           }}
         />
         {q ? (
@@ -93,19 +96,20 @@ export function Search({ compact }: { compact?: boolean }) {
               input.current?.focus()
             }}
             aria-label="Clear search"
-            style={{ color: 'var(--txt-lo)', display: 'flex' }}
+            style={{ color: 'var(--txt-lo)', display: 'flex', flex: '0 0 auto' }}
           >
             <IconClose size={13} />
           </button>
         ) : (
           <kbd
-            className="mono"
+            className="mono search__kbd"
             style={{
               fontSize: 10,
               color: 'var(--txt-mute)',
               border: '1px solid var(--line-2)',
               borderRadius: 2,
               padding: '1px 4px',
+              flex: '0 0 auto',
             }}
           >
             /
@@ -115,12 +119,13 @@ export function Search({ compact }: { compact?: boolean }) {
 
       {open && q.trim() && (
         <div
+          data-search-panel
           style={{
             position: 'absolute',
             top: 38,
             left: 0,
             right: 0,
-            minWidth: 340,
+            minWidth: 'min(340px, calc(100vw - 24px))',
             background: 'var(--ink-100)',
             border: '1px solid var(--line-2)',
             borderRadius: 'var(--r-card)',

@@ -62,12 +62,19 @@ function monogram(team: string) {
   return (parts[0][0] + (parts[1]?.[0] ?? parts[0][1] ?? '')).toUpperCase()
 }
 
+const DARK_CREST_FILTER: Record<string, string> = {
+  juventus: 'invert(0.92)',
+  tottenham: 'invert(0.92) hue-rotate(180deg)',
+  'san-diego-padres': 'brightness(2.8) saturate(1.2)',
+}
+
 export function Crest({ team, size }: { team: string; size?: number }) {
   // no explicit size -> CSS owns it, so breakpoints can scale the crest
   const dim: React.CSSProperties = size
     ? { width: size, height: size, flex: `0 0 ${size}px` }
     : { width: 'var(--crest-sz)', height: 'var(--crest-sz)', flex: '0 0 var(--crest-sz)' }
-  const real = REAL[slug(team)]
+  const s = slug(team)
+  const real = REAL[s]
   if (real) {
     return (
       <img
@@ -78,7 +85,7 @@ export function Crest({ team, size }: { team: string; size?: number }) {
         height={size}
         loading="lazy"
         decoding="async"
-        style={{ ...dim, objectFit: 'contain' }}
+        style={{ ...dim, objectFit: 'contain', filter: DARK_CREST_FILTER[s] }}
       />
     )
   }
@@ -130,7 +137,7 @@ export function FixtureLine({ fixture, size = 14 }: { fixture: string; size?: nu
   const parts = fixture.split(' v ')
   if (parts.length !== 2 || !parts[0] || !parts[1]) return <>{fixture}</>
   return (
-    <span className="row" style={{ gap: 4, minWidth: 0 }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, minWidth: 0, verticalAlign: 'middle' }}>
       <Crest team={parts[0]} size={size} />
       <Crest team={parts[1]} size={size} />
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

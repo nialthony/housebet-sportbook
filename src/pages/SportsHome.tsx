@@ -4,7 +4,7 @@ import { SPORTS, TOP_COMPS, type Match } from '../data/fixtures'
 import { MatchRow, rowSelections, rowMarketName } from '../components/MatchRow'
 import { SPORT_ICON, IconChevron, IconLive, IconClock, IconStar, IconLock } from '../components/Icons'
 import { fmtUsdt } from '../lib/rand'
-import { useOddsTick } from '../lib/useOddsTick'
+import { useOddsTick, useOddsDirection } from '../lib/useOddsTick'
 import { Crest } from '../components/Crest'
 
 /* ------------------------------------------------------------------ rail */
@@ -39,6 +39,30 @@ function LiveRail({ matches }: { matches: Match[] }) {
             <Crest team={m.away} size={16} />
             {m.away}
           </div>
+          {m.odds && (
+            <div
+              className="mono"
+              style={{
+                display: 'flex',
+                gap: 4,
+                marginTop: 2,
+                paddingTop: 6,
+                borderTop: '1px solid var(--line)',
+                fontSize: 10,
+                color: 'var(--txt-lo)',
+                justifyContent: 'space-between',
+              }}
+            >
+              {m.odds.map((o, i) => (
+                <span key={i}>
+                  <span style={{ color: 'var(--txt-mute)', marginRight: 2 }}>
+                    {m.odds!.length === 2 ? (i === 0 ? '1' : '2') : ['1', 'X', '2'][i]}
+                  </span>
+                  <b style={{ color: 'var(--txt-hi)', fontWeight: 600 }}>{o.toFixed(2)}</b>
+                </span>
+              ))}
+            </div>
+          )}
         </Link>
       ))}
     </div>
@@ -62,6 +86,7 @@ function HeroPrice({
   onPick: () => void
 }) {
   const ref = useOddsTick(odds) as React.RefObject<HTMLButtonElement>
+  const dir = useOddsDirection(odds)
   return (
     <button
       ref={ref}
@@ -72,8 +97,10 @@ function HeroPrice({
       onClick={onPick}
       aria-label={`${label} at ${odds.toFixed(2)}${suspended ? ', suspended' : ''} · ${m.home} v ${m.away}`}
     >
-      <span>{label}</span>
-      <span className="mono" style={{ fontWeight: 600 }}>
+      <span style={{ color: 'var(--txt)' }}>{label}</span>
+      <span className="mono" style={{ fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+        {!suspended && dir === 'up' && <span style={{ color: 'var(--up)', fontSize: 8 }}>▲</span>}
+        {!suspended && dir === 'down' && <span style={{ color: 'var(--hot)', fontSize: 8 }}>▼</span>}
         {odds.toFixed(2)}
       </span>
     </button>

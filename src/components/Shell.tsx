@@ -38,6 +38,7 @@ export function Wordmark() {
         housebets
       </span>
       <span
+        className="wordmark__sub"
         style={{
           fontSize: 10,
           fontWeight: 600,
@@ -60,12 +61,14 @@ function TopBar() {
     <header className="topbar">
       <Wordmark />
       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
-        <div style={{ width: '100%', maxWidth: 420, display: 'flex' }}>
+        <div style={{ width: '100%', maxWidth: 420, display: 'flex', minWidth: 0 }}>
           <Search compact />
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '0 0 auto' }}>
-        <div
+        <Link
+          to="/bets"
+          className="topbar__wallet"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -75,8 +78,9 @@ function TopBar() {
             border: '1px solid var(--line-2)',
             borderRadius: 'var(--r-row)',
             background: 'var(--ink-150)',
+            boxShadow: 'inset 0 1px 0 var(--line-2)',
           }}
-          title="Available balance"
+          title="Available on-chain balance · view ledger"
         >
           <span style={{ color: 'var(--cy)', display: 'flex' }}>
             <IconWallet size={13} />
@@ -84,14 +88,18 @@ function TopBar() {
           <span className="mono" style={{ fontSize: 'var(--fs-13)', fontWeight: 600, color: 'var(--txt-hi)' }}>
             {s.balance.toFixed(2)}
           </span>
-          <span style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>USDT</span>
-        </div>
+          <span className="topbar__unit" style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
+            USDT
+          </span>
+        </Link>
         <div
+          className="topbar__avatar"
           style={{
             width: 28,
             height: 28,
             borderRadius: 'var(--r-pill)',
-            background: 'linear-gradient(180deg, #17414c, #0d2a33)',
+            background: 'var(--ink-200)',
+            boxShadow: 'inset 0 1px 0 var(--line-3)',
             border: '1px solid var(--line-2)',
             display: 'grid',
             placeItems: 'center',
@@ -250,26 +258,32 @@ function LeftNav() {
         Following
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        {s.follows.map((f) => (
-          <div
-            key={f}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 9,
-              height: 30,
-              padding: '0 9px',
-              fontSize: 'var(--fs-13)',
-              color: 'var(--txt)',
-            }}
-          >
-            <span style={{ color: 'var(--hot)', display: 'flex' }}>
-              <IconStar size={13} filled />
-            </span>
-            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f}</span>
-            <IconChevron size={12} />
-          </div>
-        ))}
+        {s.follows.map((f) => {
+          const teamMatch = s.matches.find((m) => m.home === f || m.away === f)
+          const to = teamMatch ? `/match/${teamMatch.id}` : '/football'
+          return (
+            <Link
+              key={f}
+              to={to}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 9,
+                height: 30,
+                padding: '0 9px',
+                borderRadius: 'var(--r-row)',
+                fontSize: 'var(--fs-13)',
+                color: 'var(--txt)',
+              }}
+            >
+              <span style={{ color: 'var(--hot)', display: 'flex' }}>
+                <IconStar size={13} filled />
+              </span>
+              <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f}</span>
+              <IconChevron size={12} />
+            </Link>
+          )
+        })}
         {s.follows.length === 0 && (
           <div style={{ padding: '0 9px', fontSize: 'var(--fs-11)', color: 'var(--txt-mute)', lineHeight: 1.5 }}>
             Star a team or competition and it pins here.
@@ -577,9 +591,16 @@ export function Shell({ children }: { children: ReactNode }) {
         )}
       </div>
       <BottomNav />
-      <MobileSlipBar />
+      {!isBets && <MobileSlipBar />}
       <Toasts />
-      <style>{`@media (max-width: 700px){ .bottomnav{ display:block !important; } }`}</style>
+      <style>{`
+        @media (max-width: 700px){
+          .bottomnav{ display:block !important; }
+          .wordmark__sub, .topbar__avatar{ display:none !important; }
+          .topbar{ gap: var(--s-2); padding: 0 var(--s-3); }
+          .topbar__wallet{ padding: 0 8px !important; gap: 5px !important; }
+        }
+      `}</style>
     </div>
   )
 }

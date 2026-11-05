@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import type { Match, Selection } from '../data/fixtures'
 import { useStore } from '../state/store'
+import { useOddsDirection } from '../lib/useOddsTick'
 import { IconStar, IconChevron, IconAlert } from './Icons'
 import { Crest } from './Crest'
 
@@ -14,13 +15,18 @@ export function rowMarketName(m: Match) {
 export function rowSelections(m: Match): Selection[] {
   const n = m.odds?.length ?? 0
   const labels = n === 2 ? [m.home, m.away] : ['1', 'X', '2']
-  return (m.odds ?? []).map((o, i) => ({
-    id: `${m.id}-r${i}`,
-    label: labels[i],
-    odds: o,
-    suspended: m.status === 'live' && i === 2 && m.id === 'm1',
-    suspendReason: 'Line review',
-  }))
+  const firstMk = m.markets?.[0]
+  return (m.odds ?? []).map((o, i) => {
+    const mkSel = firstMk?.selections[i]
+    const susp = mkSel?.suspended ?? (m.status === 'live' && i === 2 && m.id === 'm1')
+    return {
+      id: `${m.id}-r${i}`,
+      label: labels[i],
+      odds: o,
+      suspended: susp,
+      suspendReason: mkSel?.suspendReason ?? 'Line review',
+    }
+  })
 }
 
 /* ------------------------------------------------------------ odds button */
@@ -40,6 +46,7 @@ export function OddsButton({
   const selected = s.slip.some((x) => x.key === key)
   const ref = useRef<HTMLButtonElement>(null)
   const prev = useRef(sel.odds)
+  const dir = useOddsDirection(sel.odds)
 
   useEffect(() => {
     const el = ref.current
@@ -59,7 +66,7 @@ export function OddsButton({
       data-suspended={sel.suspended}
       disabled={sel.suspended}
       aria-label={`${sel.label} at ${sel.odds.toFixed(2)}${sel.suspended ? ' (suspended)' : ''}`}
-      title={sel.suspended ? `Suspended: ${sel.suspendReason ?? 'market closed'}` : undefined}
+      title={sel.suspended ? `Suspended: ${sel.suspendReason ?? 'market closed'}` : `${sel.label} · ${sel.odds.toFixed(2)}`}
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -67,7 +74,13 @@ export function OddsButton({
       }}
       style={wide ? { width: 'auto', flex: '1 1 auto' } : undefined}
     >
-      {!sel.suspended && <span className="mono">{sel.odds.toFixed(2)}</span>}
+      {!sel.suspended && (
+        <span className="mono" style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+          {dir === 'up' && <span style={{ color: 'var(--up)', fontSize: 8, lineHeight: 1 }}>▲</span>}
+          {dir === 'down' && <span style={{ color: 'var(--hot)', fontSize: 8, lineHeight: 1 }}>▼</span>}
+          {sel.odds.toFixed(2)}
+        </span>
+      )}
       {sel.suspended && (
         <span style={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
           <span className="mono" style={{ opacity: 0.28 }}>

@@ -61,6 +61,7 @@ export type Toast = {
 
 /* ============================================================ helpers */
 const rng = makeRng(0x4842)
+const rngExtra = makeRng(0x7331)
 
 const REASONS = [
   'Red card, 74 minutes',
@@ -103,6 +104,7 @@ type Action =
   | { t: 'setStake'; key: string; stake: string }
   | { t: 'setSlipStakes'; stake: string }
   | { t: 'acceptChange'; key: string }
+  | { t: 'acceptAllChanges' }
   | { t: 'declineChange'; key: string }
   | { t: 'place'; bets: Bet[]; failed: { key: string; reason: string }[] }
   | { t: 'settle'; id: string; status: BetStatus }
@@ -222,10 +224,25 @@ function mapMatches(s: State, id: string, fn: (m: Match) => Match): Match[] {
 }
 
 /** nudge one selection's price, keeping the book roughly coherent */
-function nudge(o: number) {
-  const dir = rng() > 0.5 ? 1 : -1
-  const amt = dir * (0.02 + rng() * 0.14)
+function nudge(o: number, r = rng) {
+  const dir = r() > 0.5 ? 1 : -1
+  const amt = dir * (0.02 + r() * 0.14)
   return snapOdds(o + amt)
+}
+
+function findSelectionInMatch(m: Match, marketName: string, selectionId: string): Selection | undefined {
+  const mk = m.markets?.find((x) => x.name === marketName)
+  const hit = mk?.selections.find((x) => x.id === selectionId)
+  if (hit) return hit
+  const rowMatch = selectionId.match(/-r(\d+)$/)
+  if (rowMatch) {
+    const idx = Number(rowMatch[1])
+    if (mk?.selections[idx]) return mk.selections[idx]
+    if (m.odds && m.odds[idx] !== undefined) {
+      return { id: selectionId, label: String(idx), odds: m.odds[idx] }
+    }
+  }
+  return undefined
 }
 
 function reducer(s: State, a: Action): State {
@@ -239,13 +256,14 @@ function reducer(s: State, a: Action): State {
         const advance = rng() > 0.86 ? 1 : 0
         const minute = Math.min(96, (m.minute ?? 0) + advance)
         let markets = m.markets
-        if (markets?.length && rng() > 0.55) {
+        const mRng = m.id === 'm1' ? rng : rngExtra
+        if (markets?.length && mRng() > 0.55) {
           markets = markets.map((mk) => {
-            if (rng() > 0.72) {
+            if (mRng() > 0.72) {
               return {
                 ...mk,
                 selections: mk.selections.map((sel) =>
-                  sel.suspended || rng() > 0.3 ? sel : { ...sel, odds: nudge(sel.odds) },
+                  sel.suspended || mRng() > 0.3 ? sel : { ...sel, odds: nudge(sel.odds, mRng) },
                 ),
               }
             }
@@ -263,8 +281,7 @@ function reducer(s: State, a: Action): State {
         slip = slip.map((it) => {
           const m = matches.find((x) => x.id === it.matchId)
           if (!m) return it
-          const mk = m.markets?.find((x) => x.name === it.marketName)
-          const sel = mk?.selections.find((x) => x.id === it.selectionId)
+          const sel = findSelectionInMatch(m, it.marketName, it.selectionId)
           if (!sel) return it
           if (sel.suspended && it.status !== 'suspended') {
             return {
@@ -280,11 +297,14 @@ function reducer(s: State, a: Action): State {
             // a price move only matters if the price got WORSE, or better and we
             // choose to pass it on. Real books pass on both; we pass on both and
             // label it, because silence is the thing players hate.
+            const prevAccepted = it.status === 'ok' ? it.odds : it.oddsAtAdd
+            const nextOdds = Math.abs(sel.odds - prevAccepted) < 0.005 ? snapOdds(sel.odds + 0.08) : sel.odds
             return {
               ...it,
-              odds: sel.odds,
+              oddsAtAdd: prevAccepted,
+              odds: nextOdds,
               status: 'changed' as SlipStatus,
-              changeReason: REASONS[Math.floor(rng() * REASONS.length)],
+              changeReason: it.changeReason ?? REASONS[Math.floor(rng() * REASONS.length)],
               lockUntil: Date.now() + 5000,
             }
           }
@@ -326,6 +346,16 @@ function reducer(s: State, a: Action): State {
         ...s,
         slip: s.slip.map((x) =>
           x.key === a.key
+            ? { ...x, oddsAtAdd: x.odds, status: 'ok' as SlipStatus, changeReason: undefined, lockUntil: undefined }
+            : x,
+        ),
+      }
+
+    case 'acceptAllChanges':
+      return {
+        ...s,
+        slip: s.slip.map((x) =>
+          x.status === 'changed'
             ? { ...x, oddsAtAdd: x.odds, status: 'ok' as SlipStatus, changeReason: undefined, lockUntil: undefined }
             : x,
         ),
@@ -426,19 +456,41 @@ function reducer(s: State, a: Action): State {
     case 'forceOddsChange': {
       const it = s.slip.find((x) => x.key === a.key)
       if (!it) return s
+      const base = it.status === 'ok' ? it.odds : it.oddsAtAdd
+      let nextOdds = snapOdds(it.odds * (rng() > 0.45 ? 0.88 : 1.12))
+      if (Math.abs(nextOdds - base) < 0.03) {
+        nextOdds = snapOdds(base + (base > 1.3 ? -0.12 : 0.14))
+      }
+      const rowMatch = it.selectionId.match(/-r(\d+)$/)
+      const rowIdx = rowMatch ? Number(rowMatch[1]) : -1
       return {
         ...s,
         slip: s.slip.map((x) =>
           x.key === a.key
             ? {
                 ...x,
-                odds: snapOdds(x.odds * (rng() > 0.45 ? 0.88 : 1.12)),
+                oddsAtAdd: base,
+                odds: nextOdds,
                 status: 'changed' as SlipStatus,
                 changeReason: a.reason ?? REASONS[Math.floor(rng() * REASONS.length)],
                 lockUntil: Date.now() + 5000,
               }
             : x,
         ),
+        matches: mapMatches(s, it.matchId, (m) => ({
+          ...m,
+          odds: rowIdx >= 0 && m.odds ? m.odds.map((o, i) => (i === rowIdx ? nextOdds : o)) : m.odds,
+          markets: m.markets?.map((mk) =>
+            mk.name === it.marketName
+              ? {
+                  ...mk,
+                  selections: mk.selections.map((sel, i) =>
+                    sel.id === it.selectionId || i === rowIdx ? { ...sel, odds: nextOdds } : sel,
+                  ),
+                }
+              : mk,
+          ),
+        })),
       }
     }
 
@@ -446,6 +498,8 @@ function reducer(s: State, a: Action): State {
       const it = s.slip.find((x) => x.key === a.key)
       if (!it) return s
       const reason = SUSPEND_REASONS[Math.floor(rng() * SUSPEND_REASONS.length)]
+      const rowMatch = it.selectionId.match(/-r(\d+)$/)
+      const rowIdx = rowMatch ? Number(rowMatch[1]) : -1
       return {
         ...s,
         slip: s.slip.map((x) =>
@@ -457,8 +511,10 @@ function reducer(s: State, a: Action): State {
             mk.name === it.marketName
               ? {
                   ...mk,
-                  selections: mk.selections.map((sel) =>
-                    sel.id === it.selectionId ? { ...sel, suspended: true, suspendReason: reason } : sel,
+                  selections: mk.selections.map((sel, i) =>
+                    sel.id === it.selectionId || i === rowIdx
+                      ? { ...sel, suspended: true, suspendReason: reason }
+                      : sel,
                   ),
                 }
               : mk,
@@ -470,6 +526,8 @@ function reducer(s: State, a: Action): State {
     case 'forceResume': {
       const it = s.slip.find((x) => x.key === a.key)
       if (!it) return s
+      const rowMatch = it.selectionId.match(/-r(\d+)$/)
+      const rowIdx = rowMatch ? Number(rowMatch[1]) : -1
       return {
         ...s,
         slip: s.slip.map((x) => (x.key === a.key ? { ...x, status: 'ok' as SlipStatus, changeReason: undefined } : x)),
@@ -479,8 +537,8 @@ function reducer(s: State, a: Action): State {
             mk.name === it.marketName
               ? {
                   ...mk,
-                  selections: mk.selections.map((sel) =>
-                    sel.id === it.selectionId
+                  selections: mk.selections.map((sel, i) =>
+                    sel.id === it.selectionId || i === rowIdx
                       ? { ...sel, suspended: false, suspendReason: undefined }
                       : sel,
                   ),
