@@ -1,45 +1,42 @@
 /* ------------------------------------------------------------------
    Housebets Sports — design tokens
-   Palette sampled from the official contest starter wireframe
-   (desk-home.webp): #031015 / #0E212A / #21313C / #F22050 / #4ABAC6
-   Nothing here is invented. Nothing here is decoration.
+   Refined luxury Web3 sportsbook palette & geometry
+   Obsidian slate surface hierarchy · Housebets signature hot-red (#F22050) & electric cyan (#00E5FF)
    ------------------------------------------------------------------ */
 
 :root {
-  /* --- surfaces: depth by lightness step, never by shadow --- */
-  --ink-000: #031015;
-  --ink-050: #071a21;
-  --ink-100: #0b1a20;
-  --ink-150: #0e212a;
-  --ink-200: #122a34;
-  --ink-250: #162f3a;
-  --line: #1b3038;
-  --line-2: #21313c;
-  --line-3: #2c4250;
+  /* --- surfaces: obsidian slate depth hierarchy --- */
+  --ink-000: #080b11;   /* Primary app canvas */
+  --ink-050: #0e131d;   /* Topbar, sticky headers */
+  --ink-100: #131a26;   /* Rows, table surface */
+  --ink-150: #182232;   /* Elevated panels, scoreboard, sidebars */
+  --ink-200: #1e2b3e;   /* Interactive odds, buttons, inputs */
+  --ink-250: #27374e;   /* Hover surfaces */
+  --line: #1c2637;      /* Subtle dividers */
+  --line-2: #243348;    /* Structural borders */
+  --line-3: #384c69;    /* Highlight & active borders */
 
-  /* --- text --- */
-  --txt-hi: #eaf4f7;
-  --txt: #a9c2cb;
-  --txt-lo: #6c8792;
-  --txt-mute: #4c6570;
+  /* --- text: clean high-contrast slate scale --- */
+  --txt-hi: #ffffff;    /* Pure crisp white */
+  --txt: #cbd5e1;       /* Clean legible slate */
+  --txt-lo: #94a3b8;    /* Muted slate for metadata */
+  --txt-mute: #64748b;  /* Low contrast for hints */
 
-  /* --- brand / semantic --- */
-  --hot: #f22050;
+  /* --- brand / semantic: vibrant Housebets palette --- */
+  --hot: #f22050;       /* Signature Housebets hot-red */
   --hot-dim: #7d1730;
-  --hot-wash: rgba(242, 32, 80, 0.12);
-  --cy: #4abac6;
-  --cy-dim: #1f5b63;
-  --cy-wash: rgba(74, 186, 198, 0.12);
-  --up: #3dd68c;
-  --up-wash: rgba(61, 214, 140, 0.14);
+  --hot-wash: rgba(242, 32, 80, 0.16);
+  --cy: #00e5ff;        /* Electric neon cyan for active states & highlights */
+  --cy-dim: #0e434d;
+  --cy-wash: rgba(0, 229, 255, 0.14);
+  --up: #10b981;        /* Electric emerald green */
+  --up-wash: rgba(16, 185, 129, 0.16);
   --dn: #f22050;
 
   /* --- type --- */
-  --ui: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
-  --display: 'Red Hat Display', 'Figtree', Impact, sans-serif;
-  /* No mono family: Figtree ships OpenType tnum, so tabular figures are a
-     font-variant-numeric away. Everything numeric uses --num below. */
-  --num: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  --ui: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Red Hat Display', 'Figtree', sans-serif;
+  --num: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   --fs-10: 10px;
   --fs-11: 11px;
@@ -63,23 +60,23 @@
   --s-10: 40px;
   --s-12: 48px;
 
-  /* --- radius: only three values exist --- */
-  --r-row: 2px;
-  --r-card: 4px;
+  /* --- radius: modern refined geometry (6px rows/buttons, 10px cards) --- */
+  --r-row: 6px;
+  --r-card: 10px;
   --r-pill: 999px;
 
   /* --- motion --- */
   --crest-sz: 18px;
-  --t-fast: 120ms;
-  --t-base: 160ms;
-  --t-slow: 240ms;
-  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 140ms;
+  --t-base: 200ms;
+  --t-slow: 300ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* --- shell metrics --- */
   --topbar-h: 56px;
-  --nav-w: 216px;
-  --panel-w: 320px;   /* measured off desk-slip: x1120-1439 */
-  --row-h: 48px;      /* wireframe row rhythm: 46/48/52 bands */
+  --nav-w: 220px;
+  --panel-w: 320px;
+  --row-h: 48px;
   --row-h-touch: 52px;
   --odds-w: 64px;
 }

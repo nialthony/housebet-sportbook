@@ -22,30 +22,34 @@ import {
 /* ------------------------------------------------------------- wordmark */
 export function Wordmark() {
   return (
-    <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '0 0 auto' }}>
-      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+    <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '0 0 auto', textDecoration: 'none' }}>
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
         <path d="M12 2.6 22 10.2h-2.6v11.2H4.6V10.2H2L12 2.6Z" fill="var(--hot)" />
         <path d="M9.4 21.4v-6.2h5.2v6.2" fill="var(--ink-000)" />
       </svg>
       <span
         style={{
-          fontSize: 'var(--fs-15)',
+          fontSize: 'var(--fs-17)',
           fontWeight: 800,
           letterSpacing: '-0.03em',
           color: 'var(--txt-hi)',
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: 1,
         }}
       >
-        housebets
+        house<span style={{ color: 'var(--hot)' }}>bets</span>
       </span>
       <span
         className="wordmark__sub"
         style={{
           fontSize: 10,
-          fontWeight: 600,
-          letterSpacing: '0.1em',
-          color: 'var(--txt-mute)',
+          fontWeight: 700,
+          letterSpacing: '0.12em',
+          color: 'var(--cy)',
           borderLeft: '1px solid var(--line-2)',
           paddingLeft: 8,
+          textTransform: 'uppercase',
         }}
       >
         SPORTS
@@ -61,11 +65,11 @@ function TopBar() {
     <header className="topbar">
       <Wordmark />
       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
-        <div style={{ width: '100%', maxWidth: 420, display: 'flex', minWidth: 0 }}>
+        <div style={{ width: '100%', maxWidth: 440, display: 'flex', minWidth: 0 }}>
           <Search compact />
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '0 0 auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '0 0 auto' }}>
         <Link
           to="/bets"
           className="topbar__wallet"
@@ -73,39 +77,40 @@ function TopBar() {
             display: 'flex',
             alignItems: 'center',
             gap: 7,
-            height: 32,
-            padding: '0 10px',
+            height: 34,
+            padding: '0 12px',
             border: '1px solid var(--line-2)',
-            borderRadius: 'var(--r-row)',
+            borderRadius: 'var(--r-pill)',
             background: 'var(--ink-150)',
-            boxShadow: 'inset 0 1px 0 var(--line-2)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+            transition: 'border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease)',
           }}
           title="Available on-chain balance · view ledger"
         >
           <span style={{ color: 'var(--cy)', display: 'flex' }}>
-            <IconWallet size={13} />
+            <IconWallet size={14} />
           </span>
-          <span className="mono" style={{ fontSize: 'var(--fs-13)', fontWeight: 600, color: 'var(--txt-hi)' }}>
+          <span className="mono" style={{ fontSize: 'var(--fs-13)', fontWeight: 700, color: 'var(--txt-hi)' }}>
             {s.balance.toFixed(2)}
           </span>
-          <span className="topbar__unit" style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
+          <span className="topbar__unit" style={{ fontSize: 'var(--fs-10)', fontWeight: 700, color: 'var(--cy)', letterSpacing: '0.04em' }}>
             USDT
           </span>
         </Link>
         <div
           className="topbar__avatar"
           style={{
-            width: 28,
-            height: 28,
+            width: 32,
+            height: 32,
             borderRadius: 'var(--r-pill)',
             background: 'var(--ink-200)',
-            boxShadow: 'inset 0 1px 0 var(--line-3)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
             border: '1px solid var(--line-2)',
             display: 'grid',
             placeItems: 'center',
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 700,
-            color: 'var(--cy)',
+            color: 'var(--txt-hi)',
           }}
           title="Signed in as a sample account"
         >
@@ -129,21 +134,32 @@ function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; labe
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 9,
-            height: 32,
-            padding: '0 9px',
+            gap: 10,
+            height: 36,
+            padding: '0 12px',
             borderRadius: 'var(--r-row)',
             background: isActive ? 'var(--ink-150)' : 'transparent',
-            color: isActive ? 'var(--txt-hi)' : 'var(--txt-lo)',
-            boxShadow: isActive ? 'inset 2px 0 0 var(--hot)' : 'none',
+            color: isActive ? '#fff' : 'var(--txt-lo)',
+            boxShadow: isActive ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
             fontSize: 'var(--fs-13)',
             fontWeight: isActive ? 600 : 500,
+            transition: 'all var(--t-fast) var(--ease)',
           }}
         >
           <span style={{ display: 'flex', color: isActive ? 'var(--hot)' : 'inherit' }}>{icon}</span>
           <span style={{ flex: 1 }}>{label}</span>
           {badge ? (
-            <span className="mono" style={{ fontSize: 10, color: 'var(--txt-mute)' }}>
+            <span
+              className="mono"
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                padding: '1px 6px',
+                borderRadius: 'var(--r-pill)',
+                background: isActive ? 'var(--hot-wash)' : 'var(--ink-100)',
+                color: isActive ? 'var(--hot)' : 'var(--txt-mute)',
+              }}
+            >
               {badge}
             </span>
           ) : null}

@@ -83,8 +83,8 @@ export function Crest({ team, size }: { team: string; size?: number }) {
         alt=""
         width={size}
         height={size}
-        loading="lazy"
-        decoding="async"
+        loading="eager"
+        decoding="sync"
         style={{ ...dim, objectFit: 'contain', filter: DARK_CREST_FILTER[s] }}
       />
     )

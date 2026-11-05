@@ -224,11 +224,11 @@ export default function SportsHome() {
             })}
           </div>
 
-          <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
-            <Link to={`/match/${featured.id}`} className="btn btn-primary" style={{ height: 32 }}>
-              Open match
+          <div className="row" style={{ gap: 10, flexWrap: 'wrap' }}>
+            <Link to={`/match/${featured.id}`} className="btn btn-primary" style={{ height: 34, padding: '0 16px', gap: 6 }}>
+              Open match <IconChevron size={12} />
             </Link>
-            <span style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-mute)' }}>
+            <span style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
               {featured.markets?.length} market groups · singles only
             </span>
           </div>

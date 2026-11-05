@@ -54,13 +54,15 @@ export function Search({ compact }: { compact?: boolean }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 6,
-          height: 32,
-          padding: '0 8px 0 9px',
-          background: 'var(--ink-150)',
+          gap: 8,
+          height: 36,
+          padding: '0 10px 0 12px',
+          background: 'var(--ink-100)',
           border: '1px solid var(--line-2)',
-          borderRadius: 'var(--r-row)',
+          borderRadius: 'var(--r-pill)',
+          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.25)',
           overflow: 'hidden',
+          transition: 'border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease)',
         }}
       >
         <span style={{ color: 'var(--txt-lo)', display: 'flex', flex: '0 0 auto' }}>
