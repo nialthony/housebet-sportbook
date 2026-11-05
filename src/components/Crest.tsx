@@ -3,8 +3,8 @@ import { teamCode } from '../data/fixtures'
 /* ------------------------------------------------------------------
    Club crests.
 
-   Real clubs ship their real badge (bundled locally, never hotlinked —
-   a hotlinked crest is one CDN outage away from a blank row). Clubs
+   Real clubs ship their real badge (bundled locally, never hotlinked,
+   because a hotlinked crest is one CDN outage from a blank row). Clubs
    that only exist in this prototype get a generated crest instead, so
    every row has a mark and no row is ever empty.
 

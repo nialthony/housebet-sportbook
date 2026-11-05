@@ -244,7 +244,7 @@ function SlipRow({ item }: { item: SlipItem }) {
 /* ------------------------------------------------------ on-chain receipt */
 function Receipt({ bet }: { bet: Bet }) {
   const [copied, setCopied] = useState(false)
-  const short = bet.txHash ? `${bet.txHash.slice(0, 10)}…${bet.txHash.slice(-6)}` : '—'
+  const short = bet.txHash ? `${bet.txHash.slice(0, 10)}…${bet.txHash.slice(-6)}` : '–'
   const conf = Math.min(12, bet.confirmations)
   return (
     <div

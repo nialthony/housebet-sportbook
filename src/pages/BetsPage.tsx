@@ -105,7 +105,7 @@ function LedgerRow({ bet }: { bet: Bet }) {
                 ? `+${fmtUsdt(ret)}`
                 : bet.status === 'cashed'
                   ? fmtUsdt(bet.cashout)
-                  : '—'}
+                  : '–'}
             </div>
           )}
           {open && !failed && (

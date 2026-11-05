@@ -151,7 +151,7 @@ export default function MatchPage() {
                 </div>
                 <div className="row" style={{ gap: 6, marginTop: 4 }}>
                   <span className="mono" style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>
-                    {m.markets?.[0]?.selections[0]?.odds.toFixed(2) ?? '—'}
+                    {m.markets?.[0]?.selections[0]?.odds.toFixed(2) ?? '–'}
                   </span>
                   <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-mute)' }}>implied favourite</span>
                 </div>

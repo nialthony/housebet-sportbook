@@ -1,5 +1,5 @@
 /* All icons drawn for this project. 1.5px stroke, 16px grid, no emoji.
-   currentColor only — never a hardcoded fill. */
+   currentColor only, never a hardcoded fill. */
 
 type P = { size?: number; className?: string; strokeWidth?: number }
 const base = (size = 16, strokeWidth = 1.5) => ({
