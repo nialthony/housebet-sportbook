@@ -178,6 +178,18 @@ export const IconLock = ({ size = 16 }: P) => (
   </svg>
 )
 
+export const IconExpand = ({ size = 16 }: P) => (
+  <svg {...base(size)}>
+    <path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9" />
+  </svg>
+)
+
+export const IconMinimize = ({ size = 16 }: P) => (
+  <svg {...base(size)}>
+    <path d="M13.5 6.5h-4v-4M2.5 9.5h4v4M9.5 6.5l4-4M6.5 9.5l-4 4" />
+  </svg>
+)
+
 export const SPORT_ICON: Record<string, (p: P) => JSX.Element> = {
   football: IconFootball,
   basketball: IconBasketball,

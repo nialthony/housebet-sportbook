@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../state/store'
 import { SPORTS, TOP_COMPS, type Match } from '../data/fixtures'
@@ -126,11 +127,16 @@ function groupByKickoff(list: Match[]) {
 /* ================================================================= PAGE */
 export default function SportsHome() {
   const { s, addSelection } = useStore()
+  const [selectedSport, setSelectedSport] = useState<string | null>(null)
+
   const live = s.matches.filter((m) => m.status === 'live')
   const soon = s.matches.filter((m) => m.status === 'upcoming').sort((a, b) => a.kickoffOffsetMin - b.kickoffOffsetMin)
   const featured = s.matches[0]
   const featuredSels = rowSelections(featured)
-  const soonGroups = groupByKickoff(soon)
+
+  const displayedLive = selectedSport ? live.filter((m) => m.sport === selectedSport) : live
+  const displayedSoon = selectedSport ? soon.filter((m) => m.sport === selectedSport) : soon
+  const soonGroups = groupByKickoff(displayedSoon)
   const liveCount = live.length
 
   return (
@@ -138,6 +144,43 @@ export default function SportsHome() {
       <h1 className="h1" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
         Housebets Sports
       </h1>
+
+      {/* ------------------------------------------------ sports ribbon */}
+      <div className="sports-ribbon" role="toolbar" aria-label="Filter by sport">
+        <button
+          type="button"
+          className={`sports-ribbon__pill ${selectedSport === null ? 'active' : ''}`}
+          onClick={() => setSelectedSport(null)}
+        >
+          <span>All sports</span>
+          <span className="mono" style={{ fontSize: 10, color: 'var(--txt-mute)' }}>
+            {s.matches.length}
+          </span>
+        </button>
+        {SPORTS.map((sp) => {
+          const Icon = SPORT_ICON[sp.id]
+          const liveN = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+          const isAct = selectedSport === sp.id
+          return (
+            <button
+              key={sp.id}
+              type="button"
+              className={`sports-ribbon__pill ${isAct ? 'active' : ''}`}
+              onClick={() => setSelectedSport(isAct ? null : sp.id)}
+            >
+              <span style={{ color: isAct ? 'var(--cy)' : liveN ? 'var(--hot)' : 'currentColor', display: 'flex' }}>
+                <Icon size={14} />
+              </span>
+              <span>{sp.name}</span>
+              {liveN > 0 && (
+                <span className="mono" style={{ fontSize: 10, color: isAct ? '#fff' : 'var(--hot)', fontWeight: 700 }}>
+                  {liveN}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
 
       {/* ------------------------------------------------------ live rail */}
       <div className="sec" style={{ marginBottom: 'var(--s-5)' }}>
@@ -302,21 +345,43 @@ export default function SportsHome() {
         <div className="sec-head">
           <span className="row" style={{ gap: 7 }}>
             <IconLive size={13} />
-            <h2>Live now</h2>
+            <h2>{selectedSport ? `${SPORTS.find((x) => x.id === selectedSport)?.name} in play` : 'Live now'}</h2>
           </span>
-          <span className="count">{liveCount}</span>
+          <span className="count">{displayedLive.length}</span>
           <Link
-            to="/live"
+            to={selectedSport === 'football' ? '/football' : selectedSport ? `/live?sport=${selectedSport}` : '/live'}
             className="row"
             style={{ marginLeft: 'auto', fontSize: 'var(--fs-12)', color: 'var(--cy)', fontWeight: 600, gap: 4 }}
           >
-            Filter by sport <IconChevron size={12} />
+            {selectedSport ? 'Full view' : 'Filter by sport'} <IconChevron size={12} />
           </Link>
         </div>
         <div className="panel stagger" style={{ overflow: 'hidden' }}>
-          {live.slice(0, 6).map((m) => (
-            <MatchRow key={m.id} m={m} showComp />
-          ))}
+          {displayedLive.length > 0 ? (
+            displayedLive.slice(0, 6).map((m) => (
+              <MatchRow key={m.id} m={m} showComp />
+            ))
+          ) : (
+            <div style={{ padding: '20px 14px', textAlign: 'center', fontSize: 'var(--fs-12)', color: 'var(--txt-lo)' }}>
+              No live matches currently in {SPORTS.find((x) => x.id === selectedSport)?.name || 'this category'}.
+              <button
+                type="button"
+                onClick={() => setSelectedSport(null)}
+                style={{
+                  display: 'block',
+                  margin: '8px auto 0',
+                  color: 'var(--cy)',
+                  fontSize: 'var(--fs-12)',
+                  fontWeight: 600,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Show all sports
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore, useCountdown } from '../state/store'
 import type { Bet, SlipItem } from '../state/store'
-import { IconClose, IconLock, IconAlert, IconCheck, IconLink, IconCash, IconSlip, IconBets } from './Icons'
+import { IconClose, IconLock, IconAlert, IconCheck, IconLink, IconCash, IconSlip, IconBets, IconExpand, IconMinimize } from './Icons'
 import { fmtUsdt } from '../lib/rand'
 import { FixtureLine } from './Crest'
+import { useNav } from './Shell'
 
 /* ------------------------------------------------------------ atoms */
 
@@ -474,6 +475,7 @@ function BetRow({ bet }: { bet: Bet }) {
 /* ============================================================== BET SLIP */
 export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
   const { s, d, placeBets, totalStake, totalReturn } = useStore()
+  const { slipMode, toggleSlipWide, toggleSlipCollapse } = useNav()
   const [tab, setTab] = useState<'slip' | 'bets'>('slip')
   const [betTab, setBetTab] = useState<'open' | 'settled' | 'failed'>('open')
   const [forceFail, setForceFail] = useState(false)
@@ -545,6 +547,28 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
             )}
           </button>
         ))}
+        {variant === 'panel' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 6px', borderLeft: '1px solid var(--line)' }}>
+            <button
+              type="button"
+              className="slip-ctrl-btn"
+              onClick={toggleSlipWide}
+              title={slipMode === 'wide' ? 'Default width' : 'Expanded wide view'}
+              aria-label={slipMode === 'wide' ? 'Default width' : 'Expanded wide view'}
+            >
+              {slipMode === 'wide' ? <IconMinimize size={13} /> : <IconExpand size={13} />}
+            </button>
+            <button
+              type="button"
+              className="slip-ctrl-btn"
+              onClick={toggleSlipCollapse}
+              title="Minimize bet slip"
+              aria-label="Minimize bet slip"
+            >
+              <IconClose size={13} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ---------------------------------------------------- bet slip tab */}

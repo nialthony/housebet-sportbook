@@ -939,3 +939,142 @@
   overflow-y: auto;
   box-shadow: inset -1px 0 0 var(--line-3);
 }
+
+/* ==================================================================
+   EXPANDABLE / COLLAPSIBLE BET SLIP & DOCK
+   ================================================================== */
+.sidepanel {
+  transition: width 220ms var(--ease), flex 220ms var(--ease);
+}
+
+.sidepanel--normal {
+  width: var(--panel-w);
+  flex: 0 0 var(--panel-w);
+}
+
+.sidepanel--wide {
+  width: 440px !important;
+  flex: 0 0 440px !important;
+}
+
+.sidepanel--collapsed {
+  width: 0 !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+  border-left: none !important;
+  overflow: hidden !important;
+}
+
+.slip-ctrl-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-row);
+  color: var(--txt-lo);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease);
+}
+
+.slip-ctrl-btn:hover {
+  background: var(--ink-150);
+  border-color: var(--line-2);
+  color: var(--txt-hi);
+}
+
+.slip-dock-pill {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  background: var(--ink-150);
+  border: 1px solid var(--line-3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 12px rgba(0, 229, 255, 0.08);
+  color: var(--txt-hi);
+  font-size: var(--fs-13);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 50;
+  transition: transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+
+.slip-dock-pill:hover {
+  transform: translateY(-2px);
+  background: var(--ink-200);
+  border-color: var(--cy);
+  color: #ffffff;
+}
+
+.slip-dock-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  background: var(--hot);
+  color: #ffffff;
+  font-size: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1180px) {
+  .slip-dock-pill {
+    display: none !important;
+  }
+}
+
+/* Sports category ribbon */
+.sports-ribbon {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: var(--s-4);
+  scrollbar-width: none;
+}
+
+.sports-ribbon::-webkit-scrollbar {
+  display: none;
+}
+
+.sports-ribbon__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink-100);
+  border: 1px solid var(--line-2);
+  color: var(--txt-lo);
+  font-size: var(--fs-13);
+  font-weight: 600;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all var(--t-fast) var(--ease);
+}
+
+.sports-ribbon__pill:hover {
+  background: var(--ink-150);
+  border-color: var(--line-3);
+  color: var(--txt-hi);
+}
+
+.sports-ribbon__pill.active {
+  background: var(--ink-200);
+  border-color: var(--cy);
+  color: #ffffff;
+  box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useStore } from '../state/store'
 import { SPORTS, type SportId } from '../data/fixtures'
@@ -23,6 +23,11 @@ export default function Live() {
   const sport = (params.get('sport') as SportId | null) ?? null
   const [comp, setComp] = useState<string | null>(null)
   const [demoEmpty, setDemoEmpty] = useState(false)
+
+  // Reset comp filter when sport changes (e.g. from sidebar navigation)
+  useEffect(() => {
+    setComp(null)
+  }, [sport])
 
   const live = useMemo(() => {
     let list = s.matches.filter((m) => m.status === 'live')

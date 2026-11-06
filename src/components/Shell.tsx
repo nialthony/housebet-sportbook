@@ -27,6 +27,10 @@ interface NavContextType {
   drawerOpen: boolean
   setDrawerOpen: (v: boolean) => void
   toggleDrawer: () => void
+  slipMode: 'normal' | 'wide' | 'collapsed'
+  setSlipMode: (v: 'normal' | 'wide' | 'collapsed') => void
+  toggleSlipWide: () => void
+  toggleSlipCollapse: () => void
 }
 
 const NavContext = createContext<NavContextType>({
@@ -35,6 +39,10 @@ const NavContext = createContext<NavContextType>({
   drawerOpen: false,
   setDrawerOpen: () => {},
   toggleDrawer: () => {},
+  slipMode: 'normal',
+  setSlipMode: () => {},
+  toggleSlipWide: () => {},
+  toggleSlipCollapse: () => {},
 })
 
 export const useNav = () => useContext(NavContext)
@@ -879,9 +887,22 @@ export function Shell({ children }: { children: ReactNode }) {
   const isBets = pathname.startsWith('/bets')
   const [collapsed, setCollapsed] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [slipMode, setSlipMode] = useState<'normal' | 'wide' | 'collapsed'>('normal')
+  const { s } = useStore()
 
   const toggleCollapsed = () => setCollapsed((v) => !v)
   const toggleDrawer = () => setDrawerOpen((v) => !v)
+  const toggleSlipWide = () => setSlipMode((m) => (m === 'wide' ? 'normal' : 'wide'))
+  const toggleSlipCollapse = () => setSlipMode((m) => (m === 'collapsed' ? 'normal' : 'collapsed'))
+
+  // Auto-expand slip if collapsed and user adds a selection
+  const prevSlipCount = useRef(s.slip.length)
+  useEffect(() => {
+    if (s.slip.length > prevSlipCount.current && slipMode === 'collapsed') {
+      setSlipMode('normal')
+    }
+    prevSlipCount.current = s.slip.length
+  }, [s.slip.length, slipMode])
 
   // '/' focuses search, 'b' jumps to the slip, '[' toggles menu
   useEffect(() => {
@@ -918,6 +939,10 @@ export function Shell({ children }: { children: ReactNode }) {
         drawerOpen,
         setDrawerOpen,
         toggleDrawer,
+        slipMode,
+        setSlipMode,
+        toggleSlipWide,
+        toggleSlipCollapse,
       }}
     >
       <div className="app">
@@ -927,11 +952,26 @@ export function Shell({ children }: { children: ReactNode }) {
           <LeftNav />
           <main className="main">{children}</main>
           {!isBets && (
-            <aside className="sidepanel" aria-label="Bet slip">
+            <aside className={`sidepanel sidepanel--${slipMode}`} aria-label="Bet slip">
               <BetSlip />
             </aside>
           )}
         </div>
+        {!isBets && slipMode === 'collapsed' && (
+          <button
+            type="button"
+            className="slip-dock-pill"
+            onClick={() => setSlipMode('normal')}
+            title="Expand bet slip"
+            aria-label="Expand bet slip"
+          >
+            <IconSlip size={16} />
+            <span>Bet slip</span>
+            {s.slip.length > 0 && (
+              <span className="slip-dock-badge">{s.slip.length}</span>
+            )}
+          </button>
+        )}
         <BottomNav />
         {!isBets && <MobileSlipBar />}
         <MobileDrawer />
