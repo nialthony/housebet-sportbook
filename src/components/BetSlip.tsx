@@ -105,23 +105,37 @@ function StakeInput({ item, all }: { item: SlipItem; all?: boolean }) {
           </span>
         </div>
       </div>
-      <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
-        {QUICK.map((v) => (
-          <button
-            key={v}
-            className="pill mono"
-            style={{ height: 22, fontSize: 'var(--fs-11)', padding: '0 8px' }}
-            onClick={() => {
-              if (all) d({ t: 'setSlipStakes', stake: String(v) })
-              else d({ t: 'setStake', key: item.key, stake: String(v) })
-            }}
-          >
-            {v}
-          </button>
-        ))}
+      <div style={{ display: 'flex', gap: 5, marginTop: 7, flexWrap: 'wrap' }}>
+        {QUICK.map((v) => {
+          const isSelected = item.stake === String(v)
+          return (
+            <button
+              key={v}
+              type="button"
+              className="pill mono"
+              data-on={isSelected}
+              style={{
+                height: 24,
+                fontSize: 'var(--fs-11)',
+                padding: '0 8px',
+                fontWeight: isSelected ? 700 : 500,
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                const val = String(v)
+                if (all) d({ t: 'setSlipStakes', stake: val })
+                else d({ t: 'setStake', key: item.key, stake: val })
+              }}
+            >
+              +{v}
+            </button>
+          )
+        })}
         <button
+          type="button"
           className="pill"
-          style={{ height: 22, fontSize: 'var(--fs-11)', padding: '0 8px' }}
+          data-on={Number(item.stake) > 0 && Number(item.stake) === s.balance}
+          style={{ height: 24, fontSize: 'var(--fs-11)', padding: '0 8px', fontWeight: 600, cursor: 'pointer' }}
           onClick={() => {
             const others = s.slip.filter((x) => x.key !== item.key).reduce((n, x) => n + (Number(x.stake) || 0), 0)
             const v = Math.max(0, s.balance - others).toFixed(2)

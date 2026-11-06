@@ -243,6 +243,92 @@ export default function MatchPage() {
         </div>
       </div>
 
+      {/* Live Match Tracker / Momentum Center */}
+      {m.status === 'live' && (
+        <div
+          style={{
+            margin: 'var(--s-3) 0',
+            padding: '12px 16px',
+            borderRadius: 'var(--r-card)',
+            background: 'var(--ink-150)',
+            border: '1px solid var(--line-2)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <span className="live-dot" style={{ width: 6, height: 6 }} />
+              <span className="eyebrow" style={{ color: 'var(--txt-hi)', fontSize: 10 }}>
+                Match Momentum & Live Intel
+              </span>
+            </div>
+            <span style={{ fontSize: 'var(--fs-11)', color: 'var(--cy)', fontWeight: 600 }}>
+              {m.home} on attack · {m.minute}′
+            </span>
+          </div>
+
+          {/* Momentum Bar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-hi)', width: 34 }}>
+              62%
+            </span>
+            <div
+              style={{
+                flex: 1,
+                height: 6,
+                borderRadius: 3,
+                background: 'var(--ink-250)',
+                overflow: 'hidden',
+                display: 'flex',
+              }}
+            >
+              <div style={{ width: '62%', background: 'var(--cy)' }} />
+              <div style={{ width: '38%', background: 'var(--hot)' }} />
+            </div>
+            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-lo)', width: 34, textAlign: 'right' }}>
+              38%
+            </span>
+          </div>
+
+          {/* Key Stats Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+              gap: 8,
+              paddingTop: 10,
+              borderTop: '1px solid var(--line)',
+              textAlign: 'center',
+            }}
+          >
+            <div>
+              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Possession</div>
+              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
+                62% – 38%
+              </div>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Dangerous Attacks</div>
+              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
+                48 – 29
+              </div>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Shots (On Target)</div>
+              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
+                9 (4) – 3 (1)
+              </div>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Corners</div>
+              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
+                5 – 2
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {m.note && (
         <div
           className="row"

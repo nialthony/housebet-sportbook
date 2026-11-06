@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useStore } from '../state/store'
@@ -17,7 +17,27 @@ import {
   IconFootball,
   IconChevron,
   IconClose,
+  IconMenu,
 } from './Icons'
+
+/* ------------------------------------------------------------- nav context */
+interface NavContextType {
+  collapsed: boolean
+  toggleCollapsed: () => void
+  drawerOpen: boolean
+  setDrawerOpen: (v: boolean) => void
+  toggleDrawer: () => void
+}
+
+const NavContext = createContext<NavContextType>({
+  collapsed: false,
+  toggleCollapsed: () => {},
+  drawerOpen: false,
+  setDrawerOpen: () => {},
+  toggleDrawer: () => {},
+})
+
+export const useNav = () => useContext(NavContext)
 
 /* ------------------------------------------------------------- wordmark */
 export function Wordmark() {
@@ -61,9 +81,30 @@ export function Wordmark() {
 /* --------------------------------------------------------------- top bar */
 function TopBar() {
   const { s } = useStore()
+  const { collapsed, toggleCollapsed, toggleDrawer } = useNav()
+
+  const handleToggle = () => {
+    if (window.innerWidth < 1080) {
+      toggleDrawer()
+    } else {
+      toggleCollapsed()
+    }
+  }
+
   return (
     <header className="topbar">
-      <Wordmark />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '0 0 auto' }}>
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="topbar__menu-btn"
+          aria-label={collapsed ? 'Expand navigation menu' : 'Collapse navigation menu'}
+          title="Toggle menu ([)"
+        >
+          <IconMenu size={16} />
+        </button>
+        <Wordmark />
+      </div>
       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
         <div style={{ width: '100%', maxWidth: 440, display: 'flex', minWidth: 0 }}>
           <Search compact />
@@ -171,6 +212,120 @@ function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; labe
 
 function LeftNav() {
   const { s } = useStore()
+  const { collapsed, toggleCollapsed } = useNav()
+
+  if (collapsed) {
+    return (
+      <nav className="leftnav leftnav--collapsed" aria-label="Collapsed sports navigation">
+        <span style={{ display: 'none' }}>Sports</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 10 }}>
+          <NavLink
+            to="/"
+            end
+            title="Sports home"
+            className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+          >
+            <IconHome size={18} />
+          </NavLink>
+          <NavLink
+            to="/live"
+            title={`Live (${s.matches.filter((m) => m.status === 'live').length} matches)`}
+            className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+            style={{ position: 'relative' }}
+          >
+            <IconLive size={18} />
+            {s.matches.filter((m) => m.status === 'live').length > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: 7,
+                  right: 7,
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: 'var(--hot)',
+                }}
+              />
+            )}
+          </NavLink>
+          <NavLink
+            to="/football"
+            title="Football"
+            className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+          >
+            <IconFootball size={18} />
+          </NavLink>
+          <NavLink
+            to="/bets"
+            title="Bet slip & My bets"
+            className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+          >
+            <IconSlip size={18} />
+          </NavLink>
+        </div>
+
+        <div className="hr" style={{ margin: '8px 4px 10px' }} />
+
+        {/* Sports icons rail */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {SPORTS.map((sp) => {
+            const Icon = SPORT_ICON[sp.id]
+            const live = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+            return (
+              <NavLink
+                key={sp.id}
+                to={sp.id === 'football' ? '/football' : '/live?sport=' + sp.id}
+                title={`${sp.name}${live ? ` (${live} live)` : ''}`}
+                className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+                style={{ position: 'relative' }}
+              >
+                <Icon size={16} />
+                {live > 0 && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: 7,
+                      right: 7,
+                      width: 5,
+                      height: 5,
+                      borderRadius: '50%',
+                      background: 'var(--hot)',
+                    }}
+                  />
+                )}
+              </NavLink>
+            )
+          })}
+        </div>
+
+        <div className="hr" style={{ margin: '10px 4px' }} />
+
+        {/* Following shortcut */}
+        <Link
+          to="/football"
+          title={`Following (${s.follows.length} pinned)`}
+          className="rail-icon-btn"
+          style={{ color: 'var(--hot)' }}
+        >
+          <IconStar size={16} filled />
+        </Link>
+
+        {/* Expand button at bottom */}
+        <div style={{ marginTop: 'auto', paddingTop: 14 }}>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className="rail-icon-btn"
+            title="Expand menu ([)"
+            aria-label="Expand sidebar menu"
+          >
+            <IconChevron size={14} />
+          </button>
+        </div>
+      </nav>
+    )
+  }
+
   return (
     <nav className="leftnav">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 14 }}>
@@ -332,6 +487,40 @@ function LeftNav() {
         </div>
       </div>
 
+      {/* Collapse button */}
+      <div style={{ marginTop: 12, marginInline: 4 }}>
+        <button
+          type="button"
+          onClick={toggleCollapsed}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            width: '100%',
+            height: 32,
+            padding: '0 10px',
+            borderRadius: 'var(--r-row)',
+            border: '1px solid var(--line-2)',
+            background: 'var(--ink-100)',
+            color: 'var(--txt-lo)',
+            fontSize: 'var(--fs-12)',
+            fontWeight: 600,
+            cursor: 'pointer',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+            transition: 'all var(--t-fast) var(--ease)',
+          }}
+          title="Collapse menu ([)"
+        >
+          <span style={{ transform: 'rotate(180deg)', display: 'flex' }}>
+            <IconChevron size={12} />
+          </span>
+          <span>Collapse menu</span>
+          <span className="mono" style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--txt-mute)' }}>
+            [
+          </span>
+        </button>
+      </div>
+
       <div
         style={{
           marginTop: 10,
@@ -345,10 +534,10 @@ function LeftNav() {
       >
         <span className="kbd">/</span>
         <span>search</span>
+        <span className="kbd">[</span>
+        <span>menu</span>
         <span className="kbd">B</span>
         <span>bets</span>
-        <span className="kbd">esc</span>
-        <span>close</span>
       </div>
     </nav>
   )
@@ -568,13 +757,133 @@ function ToastRow({ t, onDone }: { t: import('../state/store').Toast; onDone: ()
   )
 }
 
+/* -------------------------------------------------------- mobile drawer */
+function MobileDrawer() {
+  const { drawerOpen, setDrawerOpen } = useNav()
+  const { s } = useStore()
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && drawerOpen) setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [drawerOpen, setDrawerOpen])
+
+  if (!drawerOpen) return null
+
+  return (
+    <div
+      className="drawer-backdrop"
+      onClick={() => setDrawerOpen(false)}
+    >
+      <div
+        className="drawer-panel"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <Wordmark />
+          <button
+            onClick={() => setDrawerOpen(false)}
+            aria-label="Close navigation"
+            style={{
+              width: 32,
+              height: 32,
+              display: 'grid',
+              placeItems: 'center',
+              borderRadius: 'var(--r-row)',
+              background: 'var(--ink-150)',
+              border: '1px solid var(--line-2)',
+              color: 'var(--txt-hi)',
+              cursor: 'pointer',
+            }}
+          >
+            <IconClose size={14} />
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginBottom: 16 }} onClick={() => setDrawerOpen(false)}>
+          <NavItem to="/" icon={<IconHome size={16} />} label="Sports home" />
+          <NavItem
+            to="/live"
+            icon={<IconLive size={16} />}
+            label="Live"
+            badge={s.matches.filter((m) => m.status === 'live').length}
+          />
+          <NavItem to="/football" icon={<IconFootball size={16} />} label="Football" />
+          <NavItem to="/bets" icon={<IconSlip size={16} />} label="Bet slip & My bets" />
+        </div>
+
+        <div className="eyebrow" style={{ padding: '0 9px 8px' }}>
+          Sports
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }} onClick={() => setDrawerOpen(false)}>
+          {SPORTS.map((sp) => {
+            const Icon = SPORT_ICON[sp.id]
+            const live = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+            return (
+              <NavLink
+                key={sp.id}
+                to={sp.id === 'football' ? '/football' : '/live?sport=' + sp.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  height: 34,
+                  padding: '0 10px',
+                  borderRadius: 'var(--r-row)',
+                  color: 'var(--txt-hi)',
+                  fontSize: 'var(--fs-13)',
+                }}
+              >
+                <span style={{ color: live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                  <Icon size={15} />
+                </span>
+                <span style={{ flex: 1 }}>{sp.name}</span>
+                {live > 0 && (
+                  <span className="mono" style={{ fontSize: 11, color: 'var(--hot)', fontWeight: 700 }}>
+                    {live}
+                  </span>
+                )}
+              </NavLink>
+            )
+          })}
+        </div>
+
+        <div
+          style={{
+            marginTop: 'auto',
+            padding: 12,
+            border: '1px solid var(--line-2)',
+            borderRadius: 'var(--r-card)',
+            background: 'var(--ink-100)',
+          }}
+        >
+          <div className="eyebrow" style={{ fontSize: 9 }}>House bankroll</div>
+          <div className="mono" style={{ fontSize: 'var(--fs-15)', color: 'var(--txt-hi)', fontWeight: 700 }}>
+            {HOUSE_BANKROLL.toLocaleString('en-US', { maximumFractionDigits: 0 })} USDT
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 4 }}>
+            <span className="live-dot" style={{ width: 5, height: 5 }} />
+            <span style={{ fontSize: 10, color: 'var(--txt-lo)' }}>On-chain guaranteed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* --------------------------------------------------------------- shell */
 export function Shell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
   const isBets = pathname.startsWith('/bets')
+  const [collapsed, setCollapsed] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
-  // '/' focuses search, 'b' jumps to the slip. Small, but it is the
-  // difference between a mock-up and something that feels shippable.
+  const toggleCollapsed = () => setCollapsed((v) => !v)
+  const toggleDrawer = () => setDrawerOpen((v) => !v)
+
+  // '/' focuses search, 'b' jumps to the slip, '[' toggles menu
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = document.activeElement
@@ -588,35 +897,54 @@ export function Shell({ children }: { children: ReactNode }) {
         e.preventDefault()
         window.location.hash = '#/bets'
       }
+      if (e.key === '[' && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault()
+        if (window.innerWidth < 1080) {
+          toggleDrawer()
+        } else {
+          toggleCollapsed()
+        }
+      }
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
   return (
-    <div className="app">
-      <TopBar />
-      <PausedBanner />
-      <div className="body">
-        <LeftNav />
-        <main className="main">{children}</main>
-        {!isBets && (
-          <aside className="sidepanel" aria-label="Bet slip">
-            <BetSlip />
-          </aside>
-        )}
+    <NavContext.Provider
+      value={{
+        collapsed,
+        toggleCollapsed,
+        drawerOpen,
+        setDrawerOpen,
+        toggleDrawer,
+      }}
+    >
+      <div className="app">
+        <TopBar />
+        <PausedBanner />
+        <div className="body">
+          <LeftNav />
+          <main className="main">{children}</main>
+          {!isBets && (
+            <aside className="sidepanel" aria-label="Bet slip">
+              <BetSlip />
+            </aside>
+          )}
+        </div>
+        <BottomNav />
+        {!isBets && <MobileSlipBar />}
+        <MobileDrawer />
+        <Toasts />
+        <style>{`
+          @media (max-width: 700px){
+            .bottomnav{ display:block !important; }
+            .wordmark__sub, .topbar__avatar{ display:none !important; }
+            .topbar{ gap: var(--s-2); padding: 0 var(--s-3); }
+            .topbar__wallet{ padding: 0 8px !important; gap: 5px !important; }
+          }
+        `}</style>
       </div>
-      <BottomNav />
-      {!isBets && <MobileSlipBar />}
-      <Toasts />
-      <style>{`
-        @media (max-width: 700px){
-          .bottomnav{ display:block !important; }
-          .wordmark__sub, .topbar__avatar{ display:none !important; }
-          .topbar{ gap: var(--s-2); padding: 0 var(--s-3); }
-          .topbar__wallet{ padding: 0 8px !important; gap: 5px !important; }
-        }
-      `}</style>
-    </div>
+    </NavContext.Provider>
   )
 }

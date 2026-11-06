@@ -856,3 +856,86 @@
   min-width: 38px;
   text-align: center;
 }
+
+/* ==================================================================
+   COLLAPSIBLE SIDEBAR & MOBILE DRAWER
+   ================================================================== */
+.topbar__menu-btn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: var(--ink-150);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-row);
+  color: var(--txt-hi);
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.topbar__menu-btn:hover {
+  background: var(--ink-200);
+  border-color: var(--line-3);
+  color: #ffffff;
+}
+
+.leftnav {
+  transition: width 220ms var(--ease), flex 220ms var(--ease), padding 220ms var(--ease);
+}
+
+.leftnav--collapsed {
+  --nav-w: 68px;
+  width: 68px !important;
+  flex: 0 0 68px !important;
+  padding: var(--s-3) 6px !important;
+}
+
+.rail-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 38px;
+  border-radius: var(--r-row);
+  color: var(--txt-lo);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all var(--t-fast) var(--ease);
+}
+.rail-icon-btn:hover {
+  background: var(--ink-150);
+  color: var(--txt-hi);
+  border-color: var(--line-2);
+}
+.rail-icon-btn.active {
+  background: var(--ink-150);
+  color: var(--hot);
+  border-color: var(--line-2);
+  box-shadow: inset 2px 0 0 var(--hot), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile drawer */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 12, 0.78);
+  backdrop-filter: blur(4px);
+  z-index: 120;
+}
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 280px;
+  max-width: 85vw;
+  background: var(--ink-050);
+  border-right: 1px solid var(--line-2);
+  z-index: 121;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  overflow-y: auto;
+  box-shadow: inset -1px 0 0 var(--line-3);
+}
