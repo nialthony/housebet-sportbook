@@ -475,7 +475,7 @@ function BetRow({ bet }: { bet: Bet }) {
 /* ============================================================== BET SLIP */
 export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
   const { s, d, placeBets, totalStake, totalReturn } = useStore()
-  const { slipMode, toggleSlipWide } = useNav()
+  const { slipMode, toggleSlipWide, toggleSlipOpen } = useNav()
   const [tab, setTab] = useState<'slip' | 'bets'>('slip')
   const [betTab, setBetTab] = useState<'open' | 'settled' | 'failed'>('open')
   const [forceFail, setForceFail] = useState(false)
@@ -548,15 +548,24 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
           </button>
         ))}
         {variant === 'panel' && (
-          <div style={{ display: 'flex', alignItems: 'center', padding: '0 6px', borderLeft: '1px solid var(--line)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 6px', borderLeft: '1px solid var(--line)' }}>
             <button
               type="button"
               className="slip-ctrl-btn"
               onClick={toggleSlipWide}
-              title={slipMode === 'wide' ? 'Default sidepanel width (320px)' : 'Expand sidepanel (440px)'}
-              aria-label={slipMode === 'wide' ? 'Default sidepanel width' : 'Expand sidepanel'}
+              title={slipMode === 'wide' ? 'Standard width (360px)' : 'Expanded wide view (460px)'}
+              aria-label={slipMode === 'wide' ? 'Standard width' : 'Expanded wide view'}
             >
               {slipMode === 'wide' ? <IconMinimize size={13} /> : <IconExpand size={13} />}
+            </button>
+            <button
+              type="button"
+              className="slip-ctrl-btn"
+              onClick={toggleSlipOpen}
+              title="Hide bet slip (Esc)"
+              aria-label="Hide bet slip"
+            >
+              <IconClose size={13} />
             </button>
           </div>
         )}

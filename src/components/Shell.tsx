@@ -27,6 +27,9 @@ interface NavContextType {
   drawerOpen: boolean
   setDrawerOpen: (v: boolean) => void
   toggleDrawer: () => void
+  slipOpen: boolean
+  setSlipOpen: (v: boolean) => void
+  toggleSlipOpen: () => void
   slipMode: 'normal' | 'wide'
   setSlipMode: (v: 'normal' | 'wide') => void
   toggleSlipWide: () => void
@@ -38,6 +41,9 @@ const NavContext = createContext<NavContextType>({
   drawerOpen: false,
   setDrawerOpen: () => {},
   toggleDrawer: () => {},
+  slipOpen: false,
+  setSlipOpen: () => {},
+  toggleSlipOpen: () => {},
   slipMode: 'normal',
   setSlipMode: () => {},
   toggleSlipWide: () => {},
@@ -87,7 +93,7 @@ export function Wordmark() {
 /* --------------------------------------------------------------- top bar */
 function TopBar() {
   const { s } = useStore()
-  const { collapsed, toggleCollapsed, toggleDrawer } = useNav()
+  const { collapsed, toggleCollapsed, toggleDrawer, slipOpen, toggleSlipOpen } = useNav()
 
   const handleToggle = () => {
     if (window.innerWidth < 1080) {
@@ -117,6 +123,19 @@ function TopBar() {
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '0 0 auto' }}>
+        <button
+          type="button"
+          onClick={toggleSlipOpen}
+          className={`topbar__slip-btn ${slipOpen ? 'active' : ''}`}
+          aria-label={slipOpen ? 'Hide bet slip' : 'Open bet slip'}
+          title="Toggle floating bet slip (B)"
+        >
+          <IconSlip size={14} />
+          <span className="topbar__slip-txt">Slip</span>
+          {s.slip.length > 0 && (
+            <span className="mono topbar__slip-badge">{s.slip.length}</span>
+          )}
+        </button>
         <Link
           to="/bets"
           className="topbar__wallet"
@@ -885,13 +904,26 @@ export function Shell({ children }: { children: ReactNode }) {
   const isBets = pathname.startsWith('/bets')
   const [collapsed, setCollapsed] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [slipOpen, setSlipOpen] = useState(false)
   const [slipMode, setSlipMode] = useState<'normal' | 'wide'>('normal')
+  const { s } = useStore()
 
   const toggleCollapsed = () => setCollapsed((v) => !v)
   const toggleDrawer = () => setDrawerOpen((v) => !v)
+  const toggleSlipOpen = () => setSlipOpen((v) => !v)
   const toggleSlipWide = () => setSlipMode((m) => (m === 'wide' ? 'normal' : 'wide'))
 
-  // '/' focuses search, 'b' jumps to the slip, '[' toggles menu
+  // Auto-open floating sidepanel when a bet selection is added
+  const prevSlipLen = useRef(s.slip.length)
+  useEffect(() => {
+    if (s.slip.length > prevSlipLen.current) {
+      setSlipOpen(true)
+    }
+    prevSlipLen.current = s.slip.length
+  }, [s.slip.length])
+
+  // Key shortcuts:
+  // '/' focuses search, 'b' toggles floating slip, '[' toggles menu, 'Escape' closes slip
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = document.activeElement
@@ -901,9 +933,12 @@ export function Shell({ children }: { children: ReactNode }) {
         e.preventDefault()
         document.getElementById('global-search')?.focus()
       }
+      if (e.key === 'Escape' && slipOpen) {
+        setSlipOpen(false)
+      }
       if (e.key === 'b' && !e.metaKey && !e.ctrlKey) {
         e.preventDefault()
-        window.location.hash = '#/bets'
+        setSlipOpen((v) => !v)
       }
       if (e.key === '[' && !e.metaKey && !e.ctrlKey) {
         e.preventDefault()
@@ -916,7 +951,7 @@ export function Shell({ children }: { children: ReactNode }) {
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [])
+  }, [slipOpen])
 
   return (
     <NavContext.Provider
@@ -926,6 +961,9 @@ export function Shell({ children }: { children: ReactNode }) {
         drawerOpen,
         setDrawerOpen,
         toggleDrawer,
+        slipOpen,
+        setSlipOpen,
+        toggleSlipOpen,
         slipMode,
         setSlipMode,
         toggleSlipWide,
@@ -938,11 +976,29 @@ export function Shell({ children }: { children: ReactNode }) {
           <LeftNav />
           <main className="main">{children}</main>
           {!isBets && (
-            <aside className={`sidepanel sidepanel--${slipMode}`} aria-label="Bet slip">
+            <aside
+              className={`sidepanel ${slipOpen ? 'sidepanel--open' : ''} sidepanel--${slipMode}`}
+              aria-label="Bet slip"
+            >
               <BetSlip />
             </aside>
           )}
         </div>
+        {!isBets && (
+          <button
+            type="button"
+            className={`slip-floating-pill ${slipOpen ? 'slip-floating-pill--open' : ''}`}
+            onClick={toggleSlipOpen}
+            aria-label={slipOpen ? 'Hide bet slip' : 'Open bet slip'}
+            title="Toggle floating bet slip (B)"
+          >
+            <IconSlip size={16} />
+            <span className="slip-floating-pill__txt">Bet slip</span>
+            {s.slip.length > 0 && (
+              <span className="mono slip-floating-pill__badge">{s.slip.length}</span>
+            )}
+          </button>
+        )}
         <BottomNav />
         {!isBets && <MobileSlipBar />}
         <MobileDrawer />
@@ -950,7 +1006,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <style>{`
           @media (max-width: 700px){
             .bottomnav{ display:block !important; }
-            .wordmark__sub, .topbar__avatar{ display:none !important; }
+            .wordmark__sub, .topbar__avatar, .topbar__slip-btn{ display:none !important; }
             .topbar{ gap: var(--s-2); padding: 0 var(--s-3); }
             .topbar__wallet{ padding: 0 8px !important; gap: 5px !important; }
           }

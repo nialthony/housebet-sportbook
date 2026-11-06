@@ -196,16 +196,9 @@ svg {
 }
 
 .sidepanel {
-  width: var(--panel-w);
-  flex: 0 0 var(--panel-w);
-  border-left: 1px solid var(--line);
-  background: var(--ink-000);
-  position: sticky;
-  top: var(--topbar-h);
-  height: calc(100vh - var(--topbar-h));
-  overflow-y: auto;
+  display: block;
 }
-@media (max-width: 1180px) {
+@media (max-width: 1080px) {
   .sidepanel {
     display: none;
   }
