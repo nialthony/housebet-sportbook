@@ -238,6 +238,9 @@ function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; labe
 function LeftNav() {
   const { s } = useStore()
   const { collapsed, toggleCollapsed } = useNav()
+  const { pathname, search } = useLocation()
+  const searchParams = new URLSearchParams(search)
+  const currentSport = searchParams.get('sport')
 
   if (collapsed) {
     return (
@@ -296,12 +299,15 @@ function LeftNav() {
           {SPORTS.map((sp) => {
             const Icon = SPORT_ICON[sp.id]
             const live = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+            const isAct = sp.id === 'football'
+              ? pathname === '/football'
+              : pathname === '/live' && currentSport === sp.id
             return (
               <NavLink
                 key={sp.id}
                 to={sp.id === 'football' ? '/football' : '/live?sport=' + sp.id}
                 title={`${sp.name}${live ? ` (${live} live)` : ''}`}
-                className={({ isActive }) => `rail-icon-btn ${isActive ? 'active' : ''}`}
+                className={`rail-icon-btn ${isAct ? 'active' : ''}`}
                 style={{ position: 'relative' }}
               >
                 <Icon size={16} />
@@ -372,37 +378,45 @@ function LeftNav() {
         {SPORTS.map((sp) => {
           const Icon = SPORT_ICON[sp.id]
           const live = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+          const isAct = sp.id === 'football'
+            ? pathname === '/football'
+            : pathname === '/live' && currentSport === sp.id
           return (
-            <NavLink key={sp.id} to={sp.id === 'football' ? '/football' : '/live?sport=' + sp.id} style={{ display: 'block' }}>
-              {({ isActive }) => (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 9,
-                    height: 30,
-                    padding: '0 9px',
-                    borderRadius: 'var(--r-row)',
-                    background: isActive ? 'var(--ink-150)' : 'transparent',
-                    color: isActive ? 'var(--txt-hi)' : 'var(--txt)',
-                    fontSize: 'var(--fs-13)',
-                  }}
-                >
-                  <span style={{ color: live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
-                    <Icon size={14} />
+            <NavLink
+              key={sp.id}
+              to={sp.id === 'football' ? '/football' : '/live?sport=' + sp.id}
+              style={{ display: 'block' }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 9,
+                  height: 30,
+                  padding: '0 9px',
+                  borderRadius: 'var(--r-row)',
+                  background: isAct ? 'var(--ink-150)' : 'transparent',
+                  color: isAct ? 'var(--txt-hi)' : 'var(--txt)',
+                  boxShadow: isAct ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+                  fontSize: 'var(--fs-13)',
+                  fontWeight: isAct ? 600 : 400,
+                  transition: 'all var(--t-fast) var(--ease)',
+                }}
+              >
+                <span style={{ color: isAct ? 'var(--hot)' : live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                  <Icon size={14} />
+                </span>
+                <span style={{ flex: 1 }}>{sp.name}</span>
+                {live > 0 && (
+                  <span
+                    className="mono"
+                    style={{ fontSize: 10, color: 'var(--hot)', fontWeight: 600 }}
+                    title={`${live} live`}
+                  >
+                    {live}
                   </span>
-                  <span style={{ flex: 1 }}>{sp.name}</span>
-                  {live > 0 && (
-                    <span
-                      className="mono"
-                      style={{ fontSize: 10, color: 'var(--hot)', fontWeight: 600 }}
-                      title={`${live} live`}
-                    >
-                      {live}
-                    </span>
-                  )}
-                </div>
-              )}
+                )}
+              </div>
             </NavLink>
           )
         })}
@@ -786,6 +800,9 @@ function ToastRow({ t, onDone }: { t: import('../state/store').Toast; onDone: ()
 function MobileDrawer() {
   const { drawerOpen, setDrawerOpen } = useNav()
   const { s } = useStore()
+  const { pathname, search } = useLocation()
+  const searchParams = new URLSearchParams(search)
+  const currentSport = searchParams.get('sport')
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -846,6 +863,9 @@ function MobileDrawer() {
           {SPORTS.map((sp) => {
             const Icon = SPORT_ICON[sp.id]
             const live = s.matches.filter((m) => m.sport === sp.id && m.status === 'live').length
+            const isAct = sp.id === 'football'
+              ? pathname === '/football'
+              : pathname === '/live' && currentSport === sp.id
             return (
               <NavLink
                 key={sp.id}
@@ -857,11 +877,14 @@ function MobileDrawer() {
                   height: 34,
                   padding: '0 10px',
                   borderRadius: 'var(--r-row)',
-                  color: 'var(--txt-hi)',
+                  background: isAct ? 'var(--ink-150)' : 'transparent',
+                  boxShadow: isAct ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+                  color: isAct ? '#ffffff' : 'var(--txt-hi)',
                   fontSize: 'var(--fs-13)',
+                  fontWeight: isAct ? 600 : 400,
                 }}
               >
-                <span style={{ color: live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                <span style={{ color: isAct ? 'var(--hot)' : live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
                   <Icon size={15} />
                 </span>
                 <span style={{ flex: 1 }}>{sp.name}</span>
