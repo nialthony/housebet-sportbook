@@ -77,7 +77,7 @@ export function Search({ compact }: { compact?: boolean }) {
             setOpen(true)
           }}
           onFocus={() => setOpen(true)}
-          placeholder="Teams, players, competitions, markets"
+          placeholder="Search teams, markets…"
           aria-label="Search"
           style={{
             flex: 1,

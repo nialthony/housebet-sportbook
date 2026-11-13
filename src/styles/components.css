@@ -841,6 +841,24 @@
   .search__kbd {
     display: none !important;
   }
+  .topbar {
+    gap: 8px !important;
+    padding: 0 10px !important;
+  }
+  .topbar__wallet {
+    padding: 0 9px !important;
+    gap: 5px !important;
+  }
+  .topbar__wallet .mono {
+    font-size: var(--fs-12) !important;
+  }
+  .hero {
+    padding: var(--s-4);
+  }
+  .hero .spread {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 }
 
 /* team code badge, e.g. ARS / BHA — from the wireframe scoreboard */

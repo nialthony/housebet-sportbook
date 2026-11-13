@@ -332,7 +332,16 @@ export default function SportsHome() {
               {fmtUsdt((featured.markets ?? []).reduce((n, x) => n + x.exposure, 0))}
             </div>
             <div className="row" style={{ gap: 5, marginTop: 4 }}>
-              <span className="live-dot" style={{ width: 5, height: 5 }} />
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: 'var(--up)',
+                  display: 'inline-block',
+                  flex: '0 0 auto',
+                }}
+              />
               <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}>On-chain · verifiable</span>
             </div>
             {/* Pool liquidity distribution bar */}

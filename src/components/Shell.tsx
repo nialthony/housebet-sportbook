@@ -17,7 +17,7 @@ import {
   IconFootball,
   IconChevron,
   IconClose,
-  IconMenu,
+  IconSidebarToggle,
 } from './Icons'
 
 /* ------------------------------------------------------------- nav context */
@@ -111,9 +111,9 @@ function TopBar() {
           onClick={handleToggle}
           className="topbar__menu-btn"
           aria-label={collapsed ? 'Expand navigation menu' : 'Collapse navigation menu'}
-          title="Toggle menu ([)"
+          title="Toggle navigation ([)"
         >
-          <IconMenu size={16} />
+          <IconSidebarToggle size={16} collapsed={collapsed} />
         </button>
         <Wordmark />
       </div>
@@ -410,7 +410,7 @@ function LeftNav() {
                 {live > 0 && (
                   <span
                     className="mono"
-                    style={{ fontSize: 10, color: 'var(--hot)', fontWeight: 600 }}
+                    style={{ fontSize: 10, color: 'var(--cy)', fontWeight: 600 }}
                     title={`${live} live`}
                   >
                     {live}
@@ -486,7 +486,7 @@ function LeftNav() {
                 color: 'var(--txt)',
               }}
             >
-              <span style={{ color: 'var(--hot)', display: 'flex' }}>
+              <span style={{ color: 'var(--cy)', display: 'flex' }}>
                 <IconStar size={13} filled />
               </span>
               <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f}</span>
@@ -519,7 +519,16 @@ function LeftNav() {
           <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}> USDT</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 3 }}>
-          <span className="live-dot" style={{ width: 5, height: 5 }} />
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: 'var(--up)',
+              display: 'inline-block',
+              flex: '0 0 auto',
+            }}
+          />
           <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}>
             On-chain · payouts guaranteed by the pool
           </span>
@@ -889,7 +898,7 @@ function MobileDrawer() {
                 </span>
                 <span style={{ flex: 1 }}>{sp.name}</span>
                 {live > 0 && (
-                  <span className="mono" style={{ fontSize: 11, color: 'var(--hot)', fontWeight: 700 }}>
+                  <span className="mono" style={{ fontSize: 11, color: 'var(--cy)', fontWeight: 700 }}>
                     {live}
                   </span>
                 )}

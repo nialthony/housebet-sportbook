@@ -269,23 +269,32 @@ export default function BetsPage() {
 
           {/* ---------------------------------------------- filter bar */}
           <div
-            className="filter-bar"
-            style={{ gap: 6, marginBottom: 'var(--s-2)', flexWrap: 'wrap' }}
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px 12px',
+              marginBottom: 'var(--s-3)',
+            }}
           >
-            {TIME_FILTERS.map((t) => (
-              <button key={t.id} className="pill" data-on={timeF === t.id} onClick={() => setTimeF(t.id)}>
-                {t.label}
+            <div className="filter-bar" style={{ gap: 6, marginBottom: 0 }}>
+              {TIME_FILTERS.map((t) => (
+                <button key={t.id} className="pill" data-on={timeF === t.id} onClick={() => setTimeF(t.id)}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <div className="filter-bar" style={{ gap: 6, marginBottom: 0 }}>
+              <button className="pill" data-on={sportF === 'all'} onClick={() => setSportF('all')}>
+                All sports
               </button>
-            ))}
-            <span style={{ width: 1, height: 16, background: 'var(--line-2)', margin: '0 4px' }} />
-            <button className="pill" data-on={sportF === 'all'} onClick={() => setSportF('all')}>
-              All sports
-            </button>
-            {sports.map((sp) => (
-              <button key={sp} className="pill" data-on={sportF === sp} onClick={() => setSportF(sp)}>
-                {sp}
-              </button>
-            ))}
+              {sports.map((sp) => (
+                <button key={sp} className="pill" data-on={sportF === sp} onClick={() => setSportF(sp)}>
+                  {sp}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* --------------------------------------------------- open */}

@@ -196,7 +196,7 @@ export function MatchRow({ m, showComp }: { m: Match; showComp?: boolean }) {
             d({ t: 'toggleFollow', key: m.home })
           }}
           style={{
-            color: followed ? 'var(--hot)' : 'var(--txt-mute)',
+            color: followed ? 'var(--cy)' : 'var(--txt-mute)',
             display: 'grid',
             placeItems: 'center',
             width: 24,
@@ -229,7 +229,7 @@ export function CompetitionBlock({ name, matches }: { name: string; matches: Mat
         <span className="comp-head__name">
           {name}
           {live > 0 && (
-            <span className="mono" style={{ fontSize: 10, color: 'var(--hot)', fontWeight: 600 }}>
+            <span className="mono" style={{ fontSize: 10, color: 'var(--cy)', fontWeight: 600 }}>
               {live} live
             </span>
           )}
@@ -240,7 +240,7 @@ export function CompetitionBlock({ name, matches }: { name: string; matches: Mat
         <button
           onClick={() => d({ t: 'toggleFollow', key: name })}
           aria-label={followed ? `Unfollow ${name}` : `Follow ${name}`}
-          style={{ color: followed ? 'var(--hot)' : 'var(--txt-mute)', display: 'grid', placeItems: 'center' }}
+          style={{ color: followed ? 'var(--cy)' : 'var(--txt-mute)', display: 'grid', placeItems: 'center' }}
         >
           <IconStar size={13} filled={followed} />
         </button>

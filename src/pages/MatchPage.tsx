@@ -207,7 +207,7 @@ export default function MatchPage() {
                 <button
                   onClick={() => d({ t: 'toggleFollow', key: m.home })}
                   className="row"
-                  style={{ gap: 4, fontSize: 'var(--fs-11)', color: followed ? 'var(--hot)' : 'var(--txt-lo)' }}
+                  style={{ gap: 4, fontSize: 'var(--fs-11)', color: followed ? 'var(--cy)' : 'var(--txt-lo)' }}
                   aria-pressed={followed}
                 >
                   <IconStar size={12} filled={followed} />
@@ -235,7 +235,16 @@ export default function MatchPage() {
           }}
         >
           <span className="row" style={{ gap: 7 }}>
-            <span className="live-dot" style={{ width: 5, height: 5 }} />
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: 'var(--up)',
+                display: 'inline-block',
+                flex: '0 0 auto',
+              }}
+            />
             House bankroll backing this match{' '}
             <span className="mono" style={{ color: 'var(--txt-hi)', fontWeight: 600 }}>
               {fmtUsdt((m.markets ?? []).reduce((n, x) => n + x.exposure, 0))} USDT
@@ -277,8 +286,8 @@ export default function MatchPage() {
 
           {/* Momentum Bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-hi)', width: 34 }}>
-              62%
+            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--cy)', whiteSpace: 'nowrap' }}>
+              {teamCode(m.home)} 62%
             </span>
             <div
               style={{
@@ -293,8 +302,8 @@ export default function MatchPage() {
               <div style={{ width: '62%', background: 'var(--cy)' }} />
               <div style={{ width: '38%', background: 'var(--hot)' }} />
             </div>
-            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-lo)', width: 34, textAlign: 'right' }}>
-              38%
+            <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-lo)', whiteSpace: 'nowrap', textAlign: 'right' }}>
+              38% {teamCode(m.away)}
             </span>
           </div>
 

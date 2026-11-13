@@ -51,7 +51,7 @@ export default function Football() {
 
       <div className="filter-bar" style={{ marginBottom: 'var(--s-4)' }}>
         <button className="pill" data-on={followOnly} onClick={() => setFollowOnly((v) => !v)}>
-          <span style={{ color: followOnly ? 'var(--hot)' : 'inherit', display: 'flex' }}>
+          <span style={{ color: followOnly ? 'var(--cy)' : 'inherit', display: 'flex' }}>
             <IconStar size={12} filled={followOnly} />
           </span>
           Following only

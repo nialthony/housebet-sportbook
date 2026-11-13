@@ -171,6 +171,14 @@ export const IconMenu = ({ size = 16 }: P) => (
   </svg>
 )
 
+export const IconSidebarToggle = ({ size = 16, collapsed }: P & { collapsed?: boolean }) => (
+  <svg {...base(size)}>
+    <rect x="2" y="2.5" width="12" height="11" rx="2" />
+    <path d="M6 2.5v11" />
+    {collapsed ? <path d="M8.5 6.5 10.2 8 8.5 9.5" /> : <path d="M10.2 6.5 8.5 8l1.7 1.5" />}
+  </svg>
+)
+
 export const IconLock = ({ size = 16 }: P) => (
   <svg {...base(size)}>
     <path d="M3.6 7.2h8.8v6H3.6z" />
