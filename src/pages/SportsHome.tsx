@@ -225,17 +225,43 @@ export default function SportsHome() {
             <span className="tag tag-cy">On-chain settlement</span>
           </div>
 
-          <div className="scoreline" style={{ justifyContent: 'flex-start' }}>
-            <span className="row" style={{ gap: 8 }}>
-              <Crest team={featured.home} size={22} />
-              <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.home}</span>
+          <div className="scoreline" style={{ justifyContent: 'flex-start', gap: 12 }}>
+            <span className="row" style={{ gap: 10 }}>
+              <span
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: 'var(--ink-200)',
+                  border: '1px solid var(--line-2)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Crest team={featured.home} size={24} />
+              </span>
+              <span style={{ fontSize: 'var(--fs-20)', fontWeight: 700, color: 'var(--txt-hi)' }}>{featured.home}</span>
             </span>
             <span className="scoreline__n">{featured.scoreHome}</span>
             <span className="scoreline__sep">–</span>
             <span className="scoreline__n">{featured.scoreAway}</span>
-            <span className="row" style={{ gap: 8 }}>
-              <span style={{ fontSize: 'var(--fs-17)', fontWeight: 600, color: 'var(--txt-hi)' }}>{featured.away}</span>
-              <Crest team={featured.away} size={22} />
+            <span className="row" style={{ gap: 10 }}>
+              <span style={{ fontSize: 'var(--fs-20)', fontWeight: 700, color: 'var(--txt-hi)' }}>{featured.away}</span>
+              <span
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: 'var(--ink-200)',
+                  border: '1px solid var(--line-2)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Crest team={featured.away} size={24} />
+              </span>
             </span>
           </div>
 
@@ -299,6 +325,19 @@ export default function SportsHome() {
             <div className="row" style={{ gap: 5, marginTop: 4 }}>
               <span className="live-dot" style={{ width: 5, height: 5 }} />
               <span style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}>On-chain · verifiable</span>
+            </div>
+            {/* Pool liquidity distribution bar */}
+            <div style={{ marginTop: 10 }}>
+              <div className="spread" style={{ fontSize: 9, color: 'var(--txt-mute)', marginBottom: 4 }}>
+                <span>1 · 64%</span>
+                <span>X · 22%</span>
+                <span>2 · 14%</span>
+              </div>
+              <div style={{ display: 'flex', height: 4, borderRadius: 2, overflow: 'hidden', gap: 2 }}>
+                <div style={{ width: '64%', background: 'var(--cy)' }} />
+                <div style={{ width: '22%', background: 'var(--line-3)' }} />
+                <div style={{ width: '14%', background: 'var(--hot)' }} />
+              </div>
             </div>
           </div>
 

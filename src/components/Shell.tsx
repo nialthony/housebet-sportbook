@@ -997,7 +997,9 @@ export function Shell({ children }: { children: ReactNode }) {
         <PausedBanner />
         <div className="body">
           <LeftNav />
-          <main className="main">{children}</main>
+          <main className={`main ${!isBets && slipOpen ? `main--slip-open ${slipMode === 'wide' ? 'main--slip-wide' : ''}` : ''}`}>
+            {children}
+          </main>
           {!isBets && (
             <aside
               className={`sidepanel ${slipOpen ? 'sidepanel--open' : ''} sidepanel--${slipMode}`}
@@ -1007,21 +1009,6 @@ export function Shell({ children }: { children: ReactNode }) {
             </aside>
           )}
         </div>
-        {!isBets && (
-          <button
-            type="button"
-            className={`slip-floating-pill ${slipOpen ? 'slip-floating-pill--open' : ''}`}
-            onClick={toggleSlipOpen}
-            aria-label={slipOpen ? 'Hide bet slip' : 'Open bet slip'}
-            title="Toggle floating bet slip (B)"
-          >
-            <IconSlip size={16} />
-            <span className="slip-floating-pill__txt">Bet slip</span>
-            {s.slip.length > 0 && (
-              <span className="mono slip-floating-pill__badge">{s.slip.length}</span>
-            )}
-          </button>
-        )}
         <BottomNav />
         {!isBets && <MobileSlipBar />}
         <MobileDrawer />

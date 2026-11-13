@@ -16,7 +16,7 @@ const TIME_FILTERS = [
   { id: 'custom', label: 'Custom', days: Infinity },
 ] as const
 
-const GRID = '88px minmax(0,1fr) 62px 92px 104px 128px'
+const GRID = '84px minmax(0,1fr) 56px 80px 92px 164px'
 
 /* ------------------------------------------------------------- ledger row */
 function LedgerRow({ bet }: { bet: Bet }) {
