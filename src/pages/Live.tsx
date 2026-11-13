@@ -66,7 +66,10 @@ export default function Live() {
         <div>
           <h1 className="h1">Live</h1>
           <div className="row" style={{ gap: 6, marginTop: 3, fontSize: 'var(--fs-12)', color: 'var(--txt-lo)' }}>
-            <span className="live-dot" />
+            <span className="live-badge live-badge--compact">
+              <span className="live-dot live-dot--white" />
+              LIVE
+            </span>
             {empty ? 'Nothing in play right now' : `${live.length} in play · clocks and prices update live`}
           </div>
         </div>
@@ -79,7 +82,7 @@ export default function Live() {
             type="checkbox"
             checked={demoEmpty}
             onChange={(e) => setDemoEmpty(e.target.checked)}
-            style={{ accentColor: 'var(--hot)' }}
+            style={{ accentColor: 'var(--brand)' }}
           />
           show “nothing live” state
         </label>

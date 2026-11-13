@@ -22,8 +22,11 @@
   --txt-lo: #94a3b8;    /* Muted slate for metadata */
   --txt-mute: #64748b;  /* Low contrast for hints */
 
-  /* --- brand / semantic: vibrant Housebets palette --- */
-  --hot: #f22050;       /* Signature Housebets hot-red */
+  /* --- brand / semantic: Housebets Electric Blue & Live Hot-Red --- */
+  --brand: #0095ff;     /* Signature Housebets electric blue */
+  --brand-hover: #22a6ff;
+  --brand-wash: rgba(0, 149, 255, 0.16);
+  --hot: #f22050;       /* Live badges, alerts & down-ticks */
   --hot-dim: #7d1730;
   --hot-wash: rgba(242, 32, 80, 0.16);
   --cy: #00e5ff;        /* Electric neon cyan for active states & highlights */

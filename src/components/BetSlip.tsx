@@ -520,7 +520,7 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
               fontSize: 'var(--fs-13)',
               fontWeight: 600,
               color: tab === k ? 'var(--txt-hi)' : 'var(--txt-lo)',
-              borderBottom: tab === k ? '2px solid var(--hot)' : '2px solid transparent',
+              borderBottom: tab === k ? '2px solid var(--brand)' : '2px solid transparent',
             }}
           >
             <Icon size={14} />
@@ -533,7 +533,7 @@ export function BetSlip({ variant = 'panel' }: { variant?: 'panel' | 'page' }) {
                   height: 17,
                   padding: '0 5px',
                   borderRadius: 9,
-                  background: k === 'slip' ? 'var(--hot)' : 'var(--ink-200)',
+                  background: k === 'slip' ? 'var(--brand)' : 'var(--ink-200)',
                   color: k === 'slip' ? '#fff' : 'var(--txt)',
                   fontSize: 10,
                   fontWeight: 600,

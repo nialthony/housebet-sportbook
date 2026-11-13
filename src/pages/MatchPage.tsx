@@ -170,7 +170,12 @@ export default function MatchPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: '0 4px' }}>
             <div className="row" style={{ gap: 6 }}>
-              {m.status === 'live' && <span className="live-dot" />}
+              {m.status === 'live' && (
+                <span className="live-badge live-badge--compact">
+                  <span className="live-dot live-dot--white" />
+                  LIVE
+                </span>
+              )}
               <span
                 className="mono"
                 style={{
@@ -257,7 +262,10 @@ export default function MatchPage() {
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <span className="live-dot" style={{ width: 6, height: 6 }} />
+              <span className="live-badge live-badge--compact">
+                <span className="live-dot live-dot--white" />
+                LIVE
+              </span>
               <span className="eyebrow" style={{ color: 'var(--txt-hi)', fontSize: 10 }}>
                 Match Momentum & Live Intel
               </span>

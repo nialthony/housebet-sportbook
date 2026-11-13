@@ -56,7 +56,7 @@ export function Wordmark() {
   return (
     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '0 0 auto', textDecoration: 'none' }}>
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
-        <path d="M12 2.6 22 10.2h-2.6v11.2H4.6V10.2H2L12 2.6Z" fill="var(--hot)" />
+        <path d="M12 2.6 22 10.2h-2.6v11.2H4.6V10.2H2L12 2.6Z" fill="var(--brand)" />
         <path d="M9.4 21.4v-6.2h5.2v6.2" fill="var(--ink-000)" />
       </svg>
       <span
@@ -70,7 +70,7 @@ export function Wordmark() {
           gap: 1,
         }}
       >
-        house<span style={{ color: 'var(--hot)' }}>bets</span>
+        house<span style={{ color: 'var(--brand)' }}>bets</span>
       </span>
       <span
         className="wordmark__sub"
@@ -206,13 +206,13 @@ function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; labe
             borderRadius: 'var(--r-row)',
             background: isActive ? 'var(--ink-150)' : 'transparent',
             color: isActive ? '#fff' : 'var(--txt-lo)',
-            boxShadow: isActive ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+            boxShadow: isActive ? 'inset 3px 0 0 var(--brand), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
             fontSize: 'var(--fs-13)',
             fontWeight: isActive ? 600 : 500,
             transition: 'all var(--t-fast) var(--ease)',
           }}
         >
-          <span style={{ display: 'flex', color: isActive ? 'var(--hot)' : 'inherit' }}>{icon}</span>
+          <span style={{ display: 'flex', color: isActive ? 'var(--cy)' : 'inherit' }}>{icon}</span>
           <span style={{ flex: 1 }}>{label}</span>
           {badge ? (
             <span
@@ -222,8 +222,8 @@ function NavItem({ to, icon, label, badge }: { to: string; icon: ReactNode; labe
                 fontWeight: 600,
                 padding: '1px 6px',
                 borderRadius: 'var(--r-pill)',
-                background: isActive ? 'var(--hot-wash)' : 'var(--ink-100)',
-                color: isActive ? 'var(--hot)' : 'var(--txt-mute)',
+                background: isActive ? 'var(--brand-wash)' : 'var(--ink-100)',
+                color: isActive ? 'var(--cy)' : 'var(--txt-mute)',
               }}
             >
               {badge}
@@ -397,13 +397,13 @@ function LeftNav() {
                   borderRadius: 'var(--r-row)',
                   background: isAct ? 'var(--ink-150)' : 'transparent',
                   color: isAct ? 'var(--txt-hi)' : 'var(--txt)',
-                  boxShadow: isAct ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+                  boxShadow: isAct ? 'inset 3px 0 0 var(--brand), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
                   fontSize: 'var(--fs-13)',
                   fontWeight: isAct ? 600 : 400,
                   transition: 'all var(--t-fast) var(--ease)',
                 }}
               >
-                <span style={{ color: isAct ? 'var(--hot)' : live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                <span style={{ color: isAct ? 'var(--cy)' : live ? 'var(--brand)' : 'var(--txt-mute)', display: 'flex' }}>
                   <Icon size={14} />
                 </span>
                 <span style={{ flex: 1 }}>{sp.name}</span>
@@ -623,7 +623,7 @@ function BottomNav() {
                   position: 'relative',
                 }}
               >
-                <span style={{ display: 'flex', color: isActive ? 'var(--hot)' : 'inherit' }}>{i.icon}</span>
+                <span style={{ display: 'flex', color: isActive ? 'var(--cy)' : 'inherit' }}>{i.icon}</span>
                 <span style={{ fontSize: 10, fontWeight: isActive ? 600 : 500 }}>{i.label}</span>
                 {i.badge ? (
                   <span
@@ -878,13 +878,13 @@ function MobileDrawer() {
                   padding: '0 10px',
                   borderRadius: 'var(--r-row)',
                   background: isAct ? 'var(--ink-150)' : 'transparent',
-                  boxShadow: isAct ? 'inset 3px 0 0 var(--hot), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
+                  boxShadow: isAct ? 'inset 3px 0 0 var(--brand), inset 0 1px 0 rgba(255,255,255,0.05)' : 'none',
                   color: isAct ? '#ffffff' : 'var(--txt-hi)',
                   fontSize: 'var(--fs-13)',
                   fontWeight: isAct ? 600 : 400,
                 }}
               >
-                <span style={{ color: isAct ? 'var(--hot)' : live ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                <span style={{ color: isAct ? 'var(--cy)' : live ? 'var(--brand)' : 'var(--txt-mute)', display: 'flex' }}>
                   <Icon size={15} />
                 </span>
                 <span style={{ flex: 1 }}>{sp.name}</span>

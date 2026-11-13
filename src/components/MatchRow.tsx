@@ -107,7 +107,10 @@ export function MatchClock({ m }: { m: Match }) {
   if (m.status === 'live') {
     return (
       <span className="row" style={{ gap: 5 }}>
-        <span className="live-dot" />
+        <span className="live-badge live-badge--compact">
+          <span className="live-dot live-dot--white" />
+          LIVE
+        </span>
         <b>{m.minute ?? 0}′</b>
         {m.addedTime ? <span>+{m.addedTime}</span> : null}
       </span>

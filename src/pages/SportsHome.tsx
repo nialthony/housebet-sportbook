@@ -22,7 +22,10 @@ function LiveRail({ matches }: { matches: Match[] }) {
           className="rail-card"
         >
           <div className="rail-card__top">
-            <span className="live-dot" />
+            <span className="live-badge live-badge--compact">
+              <span className="live-dot live-dot--white" />
+              LIVE
+            </span>
             <span style={{ color: 'var(--hot)', fontWeight: 600 }}>{m.minute}′</span>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.compShort}</span>
             {m.period && <span style={{ marginLeft: 'auto' }}>{m.period}</span>}
@@ -168,12 +171,12 @@ export default function SportsHome() {
               className={`sports-ribbon__pill ${isAct ? 'active' : ''}`}
               onClick={() => setSelectedSport(isAct ? null : sp.id)}
             >
-              <span style={{ color: isAct ? 'var(--cy)' : liveN ? 'var(--hot)' : 'currentColor', display: 'flex' }}>
+              <span style={{ color: isAct ? 'var(--cy)' : liveN ? 'var(--brand)' : 'currentColor', display: 'flex' }}>
                 <Icon size={14} />
               </span>
               <span>{sp.name}</span>
               {liveN > 0 && (
-                <span className="mono" style={{ fontSize: 10, color: isAct ? '#fff' : 'var(--hot)', fontWeight: 700 }}>
+                <span className="mono" style={{ fontSize: 10, color: isAct ? '#fff' : 'var(--cy)', fontWeight: 700 }}>
                   {liveN}
                 </span>
               )}
@@ -186,7 +189,10 @@ export default function SportsHome() {
       <div className="sec" style={{ marginBottom: 'var(--s-5)' }}>
         <div className="sec-head">
           <span className="row" style={{ gap: 7 }}>
-            <span className="live-dot" />
+            <span className="live-badge">
+              <span className="live-dot live-dot--white" />
+              LIVE
+            </span>
             <h2>In play</h2>
           </span>
           <span className="count">{liveCount}</span>
@@ -216,8 +222,11 @@ export default function SportsHome() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)', minWidth: 0 }}>
           <div className="spread">
             <span className="row" style={{ gap: 7 }}>
-              <span className="live-dot" />
-              <span className="eyebrow" style={{ color: 'var(--hot)' }}>
+              <span className="live-badge live-badge--compact">
+                <span className="live-dot live-dot--white" />
+                LIVE
+              </span>
+              <span className="eyebrow" style={{ color: 'var(--cy)' }}>
                 Featured · {featured.minute}′
               </span>
               <span style={{ fontSize: 'var(--fs-11)', color: 'var(--txt-lo)' }}>{featured.comp}</span>
@@ -472,14 +481,14 @@ export default function SportsHome() {
                 className="comp-card"
                 style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px' }}
               >
-                <span style={{ color: n ? 'var(--hot)' : 'var(--txt-mute)', display: 'flex' }}>
+                <span style={{ color: n ? 'var(--brand)' : 'var(--txt-mute)', display: 'flex' }}>
                   <Icon size={15} />
                 </span>
                 <span style={{ flex: 1, fontSize: 'var(--fs-12)', fontWeight: 600, color: 'var(--txt-hi)' }}>
                   {sp.name}
                 </span>
                 {n > 0 && (
-                  <span className="mono" style={{ fontSize: 10, color: 'var(--hot)', fontWeight: 600 }}>
+                  <span className="mono" style={{ fontSize: 10, color: 'var(--cy)', fontWeight: 600 }}>
                     {n}
                   </span>
                 )}
