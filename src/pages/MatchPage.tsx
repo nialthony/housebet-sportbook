@@ -258,7 +258,81 @@ export default function MatchPage() {
       </div>
 
       {/* Live Match Tracker / Momentum Center */}
-      {m.status === 'live' && (
+      {m.status === 'live' && (() => {
+        const intelBySport: Record<string, { status: string; pct: [number, number]; stats: [string, string][] }> = {
+          football: {
+            status: `${m.home} on attack · ${m.minute}′`,
+            pct: [62, 38],
+            stats: [
+              ['Possession', '62% – 38%'],
+              ['Dangerous Attacks', '48 – 29'],
+              ['Shots (On Target)', '9 (4) – 3 (1)'],
+              ['Corners', '5 – 2'],
+            ],
+          },
+          basketball: {
+            status: `${m.home} scoring run · ${m.period ?? `${m.minute}′`}`,
+            pct: [56, 44],
+            stats: [
+              ['Field Goal %', '51% – 46%'],
+              ['3-Point %', '39% – 34%'],
+              ['Rebounds', '34 – 29'],
+              ['Turnovers', '7 – 10'],
+            ],
+          },
+          tennis: {
+            status: `${m.home} serving · ${m.period ?? 'In play'}`,
+            pct: [58, 42],
+            stats: [
+              ['1st Serve %', '68% – 61%'],
+              ['Winners', '24 – 19'],
+              ['Break Points', '3/6 – 1/4'],
+              ['Aces', '9 – 5'],
+            ],
+          },
+          baseball: {
+            status: `${m.period ?? 'In play'} · ${m.home} at bat`,
+            pct: [55, 45],
+            stats: [
+              ['Hits', '8 – 5'],
+              ['Errors', '0 – 1'],
+              ['Strikeouts', '7 – 9'],
+              ['Left on Base', '4 – 6'],
+            ],
+          },
+          hockey: {
+            status: `${m.period ?? 'In play'} · Even strength`,
+            pct: [54, 46],
+            stats: [
+              ['Shots on Goal', '27 – 22'],
+              ['Power Plays', '1/3 – 0/2'],
+              ['Faceoffs Won', '54% – 46%'],
+              ['Hits', '18 – 21'],
+            ],
+          },
+          esports: {
+            status: `Map control · ${m.period ?? 'Live'}`,
+            pct: [60, 40],
+            stats: [
+              ['Round Win %', '60% – 40%'],
+              ['First Kills', '11 – 7'],
+              ['Clutches', '3 – 1'],
+              ['Economy Lead', '+4.2k'],
+            ],
+          },
+          'american-football': {
+            status: `${m.home} drive · ${m.period ?? 'Live'}`,
+            pct: [57, 43],
+            stats: [
+              ['Total Yards', '312 – 248'],
+              ['3rd Down %', '50% – 33%'],
+              ['Red Zone', '3/3 – 1/2'],
+              ['Turnovers', '0 – 2'],
+            ],
+          },
+        }
+        const intel = intelBySport[m.sport] ?? intelBySport.football
+        return (
         <div
           style={{
             margin: 'var(--s-3) 0',
@@ -280,14 +354,14 @@ export default function MatchPage() {
               </span>
             </div>
             <span style={{ fontSize: 'var(--fs-11)', color: 'var(--cy)', fontWeight: 600 }}>
-              {m.home} on attack · {m.minute}′
+              {intel.status}
             </span>
           </div>
 
           {/* Momentum Bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
             <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--cy)', whiteSpace: 'nowrap' }}>
-              {teamCode(m.home)} 62%
+              {teamCode(m.home)} {intel.pct[0]}%
             </span>
             <div
               style={{
@@ -299,11 +373,11 @@ export default function MatchPage() {
                 display: 'flex',
               }}
             >
-              <div style={{ width: '62%', background: 'var(--cy)' }} />
-              <div style={{ width: '38%', background: 'var(--hot)' }} />
+              <div style={{ width: `${intel.pct[0]}%`, background: 'var(--cy)' }} />
+              <div style={{ width: `${intel.pct[1]}%`, background: 'var(--hot)' }} />
             </div>
             <span className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--txt-lo)', whiteSpace: 'nowrap', textAlign: 'right' }}>
-              38% {teamCode(m.away)}
+              {intel.pct[1]}% {teamCode(m.away)}
             </span>
           </div>
 
@@ -318,33 +392,18 @@ export default function MatchPage() {
               textAlign: 'center',
             }}
           >
-            <div>
-              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Possession</div>
-              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
-                62% – 38%
+            {intel.stats.map(([label, val]) => (
+              <div key={label}>
+                <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>{label}</div>
+                <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
+                  {val}
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Dangerous Attacks</div>
-              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
-                48 – 29
-              </div>
-            </div>
-            <div>
-              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Shots (On Target)</div>
-              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
-                9 (4) – 3 (1)
-              </div>
-            </div>
-            <div>
-              <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>Corners</div>
-              <div className="mono" style={{ fontSize: 'var(--fs-12)', fontWeight: 700, color: 'var(--txt-hi)', marginTop: 2 }}>
-                5 – 2
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      )}
+        )
+      })()}
 
       {m.note && (
         <div

@@ -22,6 +22,7 @@ const GRID = '84px minmax(0,1fr) 56px 80px 92px 164px'
 function LedgerRow({ bet }: { bet: Bet }) {
   const { d } = useStore()
   const [copied, setCopied] = useState(false)
+  const [receiptOpen, setReceiptOpen] = useState(false)
   const ret = bet.stake * bet.odds
   const failed = bet.outcome === 'failed'
   const open = bet.status === 'open' && !failed
@@ -159,13 +160,26 @@ function LedgerRow({ bet }: { bet: Bet }) {
         ) : (
           <>
             <span className="row" style={{ gap: 5 }}>
-              <span className="tag tag-cy" style={{ fontSize: 9 }}>
-                On-chain
-              </span>
-              <span className="mono" style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)' }}>
-                {bet.txHash ? `${bet.txHash.slice(0, 12)}…${bet.txHash.slice(-6)}` : 'pending'}
-              </span>
               <button
+                type="button"
+                onClick={() => setReceiptOpen((v) => !v)}
+                className="tag tag-cy"
+                style={{ fontSize: 9, cursor: 'pointer' }}
+                title="Inspect on-chain pool settlement proof"
+              >
+                On-chain {receiptOpen ? '▴' : '▾'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setReceiptOpen((v) => !v)}
+                className="mono"
+                style={{ fontSize: 'var(--fs-10)', color: 'var(--txt-lo)', cursor: 'pointer' }}
+                title="View full transaction receipt"
+              >
+                {bet.txHash ? `${bet.txHash.slice(0, 12)}…${bet.txHash.slice(-6)}` : 'pending'}
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   navigator.clipboard?.writeText(bet.txHash)
                   setCopied(true)
@@ -189,6 +203,47 @@ function LedgerRow({ bet }: { bet: Bet }) {
           </>
         )}
       </div>
+
+      {!failed && receiptOpen && (
+        <div
+          style={{
+            margin: '0 var(--s-3) 10px',
+            padding: '10px 12px',
+            border: '1px solid var(--cy-dim)',
+            borderRadius: 'var(--r-row)',
+            background: 'var(--ink-100)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+            gap: '8px 14px',
+            fontSize: 'var(--fs-11)',
+          }}
+        >
+          <div>
+            <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>
+              Pool Contract
+            </div>
+            <div className="mono" style={{ color: 'var(--cy)', marginTop: 2 }}>
+              HousebetsPoolV2 · 0x71C4…9A4E
+            </div>
+          </div>
+          <div>
+            <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>
+              Transaction Hash
+            </div>
+            <div className="mono" style={{ color: 'var(--txt-hi)', marginTop: 2, wordBreak: 'break-all' }}>
+              {bet.txHash || 'Pending inclusion'}
+            </div>
+          </div>
+          <div>
+            <div className="eyebrow" style={{ fontSize: 9, color: 'var(--txt-mute)' }}>
+              Escrowed Payout Guarantee
+            </div>
+            <div className="mono" style={{ color: 'var(--up)', fontWeight: 600, marginTop: 2 }}>
+              {fmtUsdt(ret)} USDT · {Math.min(12, bet.confirmations)}/12 finality
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
